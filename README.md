@@ -5,8 +5,8 @@ Bomberman game in python
 |----|-------------------------------|----------------------------------|--------|
 | 3. | Postacie i poruszanie się     | Mapa, kolizje-ściany             | ❌     |
 | 4. | Grafika / skórki              | Mechanizm zabijania / wygrywania | ❌     |
-| 5. | Ustawienia                    | Menu główne                      | ❌     |
-| 6. | Mechanizm wybuchania skrzynek | Modyfikatory / bonusy            | ❌     |
+| 5. | Mechanizm wybuchania skrzynek | Modyfikatory / bonusy            | ❌     |
+| 6. | Ustawienia                    | Menu główne                      | ❌     |
 | 7. | Finalne poprawki              | Finalne poprawki                 | ❌     |
 
 
