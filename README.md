@@ -3,10 +3,10 @@ Bomberman game in python
 
 |    | Piotr Andres                  | Paweł Podedworny                 | Status |
 |----|-------------------------------|----------------------------------|--------|
-| 3. | Ustawienia                    | Menu główne                      | ❌     |
-| 4. | Postacie i poruszanie się     | Mapa, kolizje-ściany             | ❌     |
-| 5. | Mechanizm wybuchania skrzynek | Modyfikatory / bonusy            | ❌     |
-| 6. | Grafika / skórki              | Mechanizm zabijania / wygrywania | ❌     |
+| 3. | Postacie i poruszanie się     | Mapa, kolizje-ściany             | ❌     |
+| 4. | Grafika / skórki              | Mechanizm zabijania / wygrywania | ❌     |
+| 5. | Ustawienia                    | Menu główne                      | ❌     |
+| 6. | Mechanizm wybuchania skrzynek | Modyfikatory / bonusy            | ❌     |
 | 7. | Finalne poprawki              | Finalne poprawki                 | ❌     |
 
 
