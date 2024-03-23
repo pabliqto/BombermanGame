@@ -1,93 +1,74 @@
 import pygame
 import os
-
+COOLDOWN = 8
+PlAYER_SCALE = 1.3
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("idle-front.png", 1.3)
+        self.image, self.rect = load_png("idle-front.png", PlAYER_SCALE)
         self.rect.topleft = (x, y)
-        # self.image = pygame.transform.rotate(self.image, 180)
-        self.speed = 3
-        self.direction = "N"
+        self.speed = 2
+        self.direction = "S"
         self.animation = 1
+        self.cooldown = COOLDOWN
+
     def update(self):
         pass
-    def animation_move(self,direction):
-        if direction == "D":
-            if self.animation == 1:
-                self.image, self.rect = load_png("walk-right2.png", 1.3)
-                self.animation = 2
-            elif self.animation == 2:
-                self.image, self.rect = load_png("walk-right3.png", 1.3)
-                self.animation = 3
-            elif self.animation == 3:
-                self.image, self.rect = load_png("walk-right4.png", 1.3)
-                self.animation = 4
-            elif self.animation == 4:
-                self.image, self.rect = load_png("walk-right1.png", 1.3)
-                self.animation = 1
-        elif direction == "A":
-            if self.animation == 1:
-                self.image, self.rect = load_png("walk-left2.png", 1.3)
-                self.animation = 2
-            elif self.animation == 2:
-                self.image, self.rect = load_png("walk-left3.png", 1.3)
-                self.animation = 3
-            elif self.animation == 3:
-                self.image, self.rect = load_png("walk-left4.png", 1.3)
-                self.animation = 4
-            elif self.animation == 4:
-                self.image, self.rect = load_png("walk-left1.png", 1.3)
-                self.animation = 1
-        elif direction == "W":
-            if self.animation == 1:
-                self.image, self.rect = load_png("walk-back2.png", 1.3)
-                self.animation = 2
-            elif self.animation == 2:
-                self.image, self.rect = load_png("walk-back3.png", 1.3)
-                self.animation = 3
-            elif self.animation == 3:
-                self.image, self.rect = load_png("walk-back4.png", 1.3)
-                self.animation = 4
-            elif self.animation == 4:
-                self.image, self.rect = load_png("walk-back1.png", 1.3)
-                self.animation = 1
-        elif direction == "S":
-            if self.animation == 1:
-                self.image, self.rect = load_png("walk-front2.png", 1.3)
-                self.animation = 2
-            elif self.animation == 2:
-                self.image, self.rect = load_png("walk-front3.png", 1.3)
-                self.animation = 3
-            elif self.animation == 3:
-                self.image, self.rect = load_png("walk-front4.png", 1.3)
-                self.animation = 4
-            elif self.animation == 4:
-                self.image, self.rect = load_png("walk-front1.png", 1.3)
-                self.animation = 1
+
+    def animation_move(self, direction):
+        scale = PlAYER_SCALE
+        if self.cooldown == 0:
+            pic = 'walk-'
+            curr_animation = self.animation
+
+            if curr_animation == 4:
+                curr_animation = 1
+            else:
+                curr_animation += 1
+
+            if direction == "D" or direction == "WD" or direction == "SD":
+                pic += 'right'
+            elif direction == "A" or direction == "WA" or direction == "SA":
+                pic += 'left'
+            elif direction == "W":
+                pic += 'back'
+            elif direction == "S":
+                pic += 'front'
+
+            if direction != "WS" and direction != "AD":
+                self.animation = curr_animation
+                pic += str(curr_animation) + '.png'
+                self.image, self.rect = load_png(pic, scale)
+            self.cooldown = COOLDOWN
+        else:
+            self.cooldown -= 1
+
     def orientation(self, direction):
+        scale = PlAYER_SCALE
         x, y = self.rect.topleft
         if direction != self.direction:
             if direction == "W":
-                self.image, self.rect = load_png("idle-back.png", 1.3)
+                self.image, self.rect = load_png("idle-back.png", scale)
             elif direction == "A":
-                self.image, self.rect = load_png("idle-left.png", 1.3)
+                self.image, self.rect = load_png("idle-left.png", scale)
             elif direction == "S":
-                self.image, self.rect = load_png("idle-front.png", 1.3)
+                self.image, self.rect = load_png("idle-front.png", scale)
             elif direction == "D":
-                self.image, self.rect = load_png("idle-right.png", 1.3)
+                self.image, self.rect = load_png("idle-right.png", scale)
             elif direction == "SA" or direction == "WA":
-                self.image, self.rect = load_png("idle-left.png", 1.3)
+                self.image, self.rect = load_png("idle-left.png", scale)
             elif direction == "SD" or direction == "WD":
-                self.image, self.rect = load_png("idle-right.png", 1.3)
-            if  direction not in {"WA", "AS", "SD", "WD"}:
+                self.image, self.rect = load_png("idle-right.png", scale)
+            if direction not in {"WA", "AS", "SD", "WD"}:
                 self.direction = direction
                 self.animation_move(direction)
+            self.cooldown = COOLDOWN
         else:
             self.animation_move(direction)
 
         self.rect.topleft = (x, y)
+
     def move(self, direction):
         new_pos = self.rect.copy()
 
@@ -98,6 +79,25 @@ class Player(pygame.sprite.Sprite):
             elif "A" in direction and "D" in direction:
                 direction = direction.replace("A", "")
                 direction = direction.replace("D", "")
+        self.orientation(direction)
+
+        if "A" in direction:
+            new_pos.x -= self.speed
+
+        if "D" in direction:
+            new_pos.x += self.speed
+
+        f = 1
+        for wall in allWalls:
+            if new_pos.colliderect(wall.rect):
+                print("?")
+                f = 0
+                break
+        if f:
+            self.rect = new_pos
+        else:
+            new_pos = self.rect.copy()
+
 
         if "W" in direction:
             new_pos.y -= self.speed
@@ -108,31 +108,13 @@ class Player(pygame.sprite.Sprite):
         f = 1
         for wall in allWalls:
             if new_pos.colliderect(wall.rect):
-                print("wall", wall.rect)
+                print("wall", wall.rect.bottom, wall.rect.top, wall.rect.left, wall.rect.right)
+                print("player", self.rect.bottom, self.rect.top, self.rect.left, self.rect.right)
                 f = 0
+                break
         if f:
             self.rect = new_pos
-        else:
-            new_pos = self.rect.copy()
 
-        if "A" in direction:
-            new_pos.x -= self.speed
-
-
-        if "D" in direction:
-            new_pos.x += self.speed
-
-        f = 1
-        for wall in allWalls:
-            if new_pos.colliderect(wall.rect):
-                f = 0
-        if f:
-            self.rect = new_pos
-        else:
-            new_pos = self.rect.copy()
-
-        # self.rect = new_pos
-        self.orientation(direction)
 
 
 class Wall(pygame.sprite.Sprite):
@@ -226,8 +208,8 @@ if __name__ == "__main__":
             xd += 'S'
         if keys[pygame.K_d]:
             xd += 'D'
-        # if len(xd) > 0:
-        player.move(xd)
+        if len(xd) > 0:
+            player.move(xd)
 
         screen.fill((47, 47, 46))
         allWalls.draw(screen)
