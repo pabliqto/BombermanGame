@@ -2,8 +2,8 @@ import pygame
 import os
 
 COOLDOWN = 8
-PLAYER_SCALE = 1
-PLAYER_SPEED = 1
+PLAYER_SCALE = 1.3
+PLAYER_SPEED = 3
 
 
 class Player(pygame.sprite.Sprite):
@@ -21,6 +21,11 @@ class Player(pygame.sprite.Sprite):
 
     def animation_move(self, direction):
         scale = PLAYER_SCALE
+        if direction == "WD" or direction == "SD":
+            direction = "D"
+        if direction == "WA" or direction == "SA":
+            direction = "A"
+
         if self.cooldown == 0:
             pic = 'walk-'
             curr_animation = self.animation
@@ -30,9 +35,9 @@ class Player(pygame.sprite.Sprite):
             else:
                 curr_animation += 1
 
-            if direction == "D" or direction == "WD" or direction == "SD":
+            if direction == "D":
                 pic += 'right'
-            elif direction == "A" or direction == "WA" or direction == "SA":
+            elif direction == "A":
                 pic += 'left'
             elif direction == "W":
                 pic += 'back'
@@ -63,17 +68,14 @@ class Player(pygame.sprite.Sprite):
                 self.image, self.rect = load_png("idle-left.png", scale)
             elif direction == "SD" or direction == "WD":
                 self.image, self.rect = load_png("idle-right.png", scale)
-            if direction not in {"WA", "AS", "SD", "WD"}:
-                self.direction = direction
-                self.animation_move(direction)
-            self.cooldown = COOLDOWN
+            self.direction = direction
         else:
             self.animation_move(direction)
-
         self.rect.topleft = (x, y)
 
     def move(self, direction):
-        new_pos = self.rect.copy()
+        if len(direction) == 4 or direction == 'AD' or direction == 'WS':
+            return
 
         if len(direction) == 3:
             if "W" in direction and "S" in direction:
@@ -82,6 +84,8 @@ class Player(pygame.sprite.Sprite):
             elif "A" in direction and "D" in direction:
                 direction = direction.replace("A", "")
                 direction = direction.replace("D", "")
+
+        new_pos = self.rect.copy()
         self.orientation(direction)
 
         if "A" in direction:
@@ -160,7 +164,6 @@ def initialize_board(n, window_width, window_height, size=48):
             if i == 0 or i == n - 1 or j == 0 or j == n - 1:
                 walls.append(Wall(w + i * size, h + j * size))
             elif i % 2 == 0 and j % 2 == 0:
-
                 walls.append(Wall(w + i * size, h + j * size))
             else:
                 floors.append(Floor(w + i * size, h + j * size))
@@ -199,10 +202,10 @@ if __name__ == "__main__":
         xd = ''
         if keys[pygame.K_w]:
             xd += 'W'
-        if keys[pygame.K_a]:
-            xd += 'A'
         if keys[pygame.K_s]:
             xd += 'S'
+        if keys[pygame.K_a]:
+            xd += 'A'
         if keys[pygame.K_d]:
             xd += 'D'
         if len(xd) > 0:
