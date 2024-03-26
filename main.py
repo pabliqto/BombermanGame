@@ -1,14 +1,17 @@
 import pygame
 import os
+
 COOLDOWN = 8
-PlAYER_SCALE = 1.3
+PLAYER_SCALE = 1
+PLAYER_SPEED = 1
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("idle-front.png", PlAYER_SCALE)
+        self.image, self.rect = load_png("idle-front.png", PLAYER_SCALE)
         self.rect.topleft = (x, y)
-        self.speed = 2
+        self.speed = PLAYER_SPEED
         self.direction = "S"
         self.animation = 1
         self.cooldown = COOLDOWN
@@ -17,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         pass
 
     def animation_move(self, direction):
-        scale = PlAYER_SCALE
+        scale = PLAYER_SCALE
         if self.cooldown == 0:
             pic = 'walk-'
             curr_animation = self.animation
@@ -45,7 +48,7 @@ class Player(pygame.sprite.Sprite):
             self.cooldown -= 1
 
     def orientation(self, direction):
-        scale = PlAYER_SCALE
+        scale = PLAYER_SCALE
         x, y = self.rect.topleft
         if direction != self.direction:
             if direction == "W":
@@ -90,14 +93,12 @@ class Player(pygame.sprite.Sprite):
         f = 1
         for wall in allWalls:
             if new_pos.colliderect(wall.rect):
-                print("?")
                 f = 0
                 break
         if f:
             self.rect = new_pos
-        else:
-            new_pos = self.rect.copy()
 
+        new_pos = self.rect.copy()
 
         if "W" in direction:
             new_pos.y -= self.speed
@@ -108,13 +109,10 @@ class Player(pygame.sprite.Sprite):
         f = 1
         for wall in allWalls:
             if new_pos.colliderect(wall.rect):
-                print("wall", wall.rect.bottom, wall.rect.top, wall.rect.left, wall.rect.right)
-                print("player", self.rect.bottom, self.rect.top, self.rect.left, self.rect.right)
                 f = 0
                 break
         if f:
             self.rect = new_pos
-
 
 
 class Wall(pygame.sprite.Sprite):
@@ -160,8 +158,7 @@ def initialize_board(n, window_width, window_height, size=48):
     for i in range(n):
         for j in range(n):
             if i == 0 or i == n - 1 or j == 0 or j == n - 1:
-                if i > 2:  ## DO WYWALENIA
-                    walls.append(Wall(w + i * size, h + j * size))
+                walls.append(Wall(w + i * size, h + j * size))
             elif i % 2 == 0 and j % 2 == 0:
 
                 walls.append(Wall(w + i * size, h + j * size))
