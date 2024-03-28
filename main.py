@@ -1,13 +1,12 @@
 import pygame
 import os
+import random
 
-COOLDOWN = 8
-PLAYER_SCALE = 1.3
-PLAYER_SPEED = 3
+from global_variables import COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, BLOCK_SCALE
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, player_id=0):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("idle-front.png", PLAYER_SCALE)
         self.rect.topleft = (x, y)
@@ -15,6 +14,9 @@ class Player(pygame.sprite.Sprite):
         self.direction = "S"
         self.animation = 1
         self.cooldown = COOLDOWN
+        self.player_id = player_id
+        self.bomb = False
+        self.bomb_count = 1
 
     def update(self):
         pass
@@ -95,10 +97,8 @@ class Player(pygame.sprite.Sprite):
             new_pos.x += self.speed
 
         f = 1
-        for wall in allWalls:
-            if new_pos.colliderect(wall.rect):
-                f = 0
-                break
+        if new_pos.collidelist(walls) != -1 or new_pos.collidelist(list(b_objects.values())) != -1:
+            f = 0
         if f:
             self.rect = new_pos
 
@@ -111,31 +111,37 @@ class Player(pygame.sprite.Sprite):
             new_pos.y += self.speed
 
         f = 1
-        for wall in allWalls:
-            if new_pos.colliderect(wall.rect):
-                f = 0
-                break
+        if new_pos.collidelist(walls) != -1 or new_pos.collidelist(list(b_objects.values())) != -1:
+            f = 0
         if f:
             self.rect = new_pos
 
 
 class Wall(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, xcoord, ycoord):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("floor.png", 3)
+        self.image, self.rect = load_png("floor.png", BLOCK_SCALE)
         self.rect.topleft = (x, y)
+        self.xcoord = xcoord
+        self.ycoord = ycoord
 
 
 class Floor(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, xcoord, ycoord):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("fl.png", 3)
+        self.image, self.rect = load_png("fl.png", BLOCK_SCALE)
         self.rect.topleft = (x, y)
+        self.xcoord = xcoord
+        self.ycoord = ycoord
 
-
+#jak gracz kladzie bombe to do czasu zejscia z niej ma jakas flage, jak zejdzie to sie przelacza i nie moze chodzic po bombie/ trzeba rozpatrzec aby nie mogl przejsc z jednej na druga
 class Box(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x, y, xcoord, ycoord):
         pygame.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_png("box3.png", BLOCK_SCALE)
+        self.rect.topleft = (x, y)
+        self.xcoord = xcoord
+        self.ycoord = ycoord
 
 
 def load_png(name, scale: float = 1):
@@ -151,7 +157,7 @@ def load_png(name, scale: float = 1):
     return image, image.get_rect()
 
 
-def initialize_board(n, window_width, window_height, size=48):
+def initialize_board(n, window_width, window_height, size=16 * BLOCK_SCALE, chance=0.9):
     if n % 2 == 0:
         n += 1
     w = (window_width - n * size) // 2
@@ -159,15 +165,18 @@ def initialize_board(n, window_width, window_height, size=48):
 
     walls = []
     floors = []
+    b_objects = {}
     for i in range(n):
         for j in range(n):
             if i == 0 or i == n - 1 or j == 0 or j == n - 1:
-                walls.append(Wall(w + i * size, h + j * size))
+                walls.append(Wall(w + i * size, h + j * size, i, j))
             elif i % 2 == 0 and j % 2 == 0:
-                walls.append(Wall(w + i * size, h + j * size))
+                walls.append(Wall(w + i * size, h + j * size, i, j))
             else:
-                floors.append(Floor(w + i * size, h + j * size))
-    return walls, floors
+                floors.append(Floor(w + i * size, h + j * size, i, j))
+                if (2 < i < n - 3 or 2 < j < n - 3) and random.random() <= chance:
+                    b_objects[(i, j)] = Box(w + i * size, h + j * size, i, j)
+    return walls, floors, b_objects
 
 
 if __name__ == "__main__":
@@ -183,9 +192,10 @@ if __name__ == "__main__":
     window_width = screen.get_width()
     window_height = screen.get_height()
 
-    walls, floors = initialize_board(n, window_width, window_height)
+    walls, floors, b_objects = initialize_board(n, window_width, window_height)
     allWalls = pygame.sprite.RenderPlain(walls)
     allFloors = pygame.sprite.RenderPlain(floors)
+    allB_objects = pygame.sprite.RenderPlain(b_objects.values())
     player = Player(walls[0].rect.x + walls[0].image.get_width(), walls[0].rect.y + walls[0].image.get_height())
 
     allPlayers = pygame.sprite.RenderPlain(player)
@@ -199,21 +209,24 @@ if __name__ == "__main__":
                 if event.key == pygame.K_ESCAPE:
                     running = False
         keys = pygame.key.get_pressed()
-        xd = ''
+        direction = ''
         if keys[pygame.K_w]:
-            xd += 'W'
+            direction += 'W'
         if keys[pygame.K_s]:
-            xd += 'S'
+            direction += 'S'
         if keys[pygame.K_a]:
-            xd += 'A'
+            direction += 'A'
         if keys[pygame.K_d]:
-            xd += 'D'
-        if len(xd) > 0:
-            player.move(xd)
+            direction += 'D'
+        if direction:
+            player.move(direction)
 
+        if keys[pygame.K_SPACE]:
+            print(player.rect.topleft)
         screen.fill((47, 47, 46))
         allWalls.draw(screen)
         allFloors.draw(screen)
+        allB_objects.draw(screen)
         allPlayers.draw(screen)
         pygame.display.flip()
         clock.tick(60)
