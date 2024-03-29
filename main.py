@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.cooldown = COOLDOWN
         self.player_id = player_id
         self.bomb = False
-        self.bomb_count = 3
+        self.bomb_count = 10
         self.current_bomb = 0
 
     def update(self):
@@ -135,7 +135,7 @@ class Player(pygame.sprite.Sprite):
     def place_bomb(self):
         if not self.bomb and self.bomb_count > 0:
             i, j = self.get_coords()
-            if boxes.get((i, j)) is None:
+            if boxes.get((i, j)) is None and bombs.get((i, j)) is None:
                 new_bomb = Bomb((i+1/2) * REAL_SIZE + START_X, (j+1/2) * REAL_SIZE + START_Y, i, j, self.player_id, self.current_bomb)
                 bombs[(i, j)] = new_bomb
                 allBombs.add(new_bomb)
