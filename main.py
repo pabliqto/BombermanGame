@@ -17,7 +17,8 @@ class Player(pygame.sprite.Sprite):
         self.cooldown = COOLDOWN
         self.player_id = player_id
         self.bomb = False
-        self.bomb_count = 1
+        self.bomb_count = 3
+        self.current_bomb = 0
 
     def update(self):
         pass
@@ -97,12 +98,18 @@ class Player(pygame.sprite.Sprite):
         if "D" in direction:
             new_pos.x += self.speed
 
-        f = 1
-        if new_pos.collidelist(walls) != -1:
-            f = 0
-
-        if f:
-            self.rect = new_pos
+        if new_pos.collidelist(walls) == -1 and new_pos.collidelist(list(boxes.values())) == -1:
+            blist = list(bombs.values())
+            bindex = new_pos.collidelist(blist)
+            if not self.bomb and bindex == -1:
+                self.rect = new_pos
+            elif self.bomb and bindex != -1:
+                if blist[bindex].player_id == self.player_id and blist[bindex].number == self.current_bomb:
+                    self.rect = new_pos
+            elif self.bomb and bindex == -1:
+                self.rect = new_pos
+                self.bomb = False
+                self.current_bomb += 1
 
         new_pos = self.rect.copy()
 
@@ -112,27 +119,34 @@ class Player(pygame.sprite.Sprite):
         if "S" in direction:
             new_pos.y += self.speed
 
-        f = 1
-        if new_pos.collidelist(walls) != -1 :
-            f = 0
-
-        if f:
-            self.rect = new_pos
+        if new_pos.collidelist(walls) == -1 and new_pos.collidelist(list(boxes.values())) == -1:
+            blist = list(bombs.values())
+            bindex = new_pos.collidelist(blist)
+            if not self.bomb and bindex == -1:
+                self.rect = new_pos
+            elif self.bomb and bindex != -1:
+                if blist[bindex].player_id == self.player_id and blist[bindex].number == self.current_bomb:
+                    self.rect = new_pos
+            elif self.bomb and bindex == -1:
+                self.rect = new_pos
+                self.bomb = False
+                self.current_bomb += 1
 
     def place_bomb(self):
         if not self.bomb and self.bomb_count > 0:
-            #using start_x and start_y to get the correct coordinates
-            x, y = self.rect.topleft
-            x += self.image.get_width() // 2
-            y += self.image.get_height() // 2
-            i = (x - START_X) // REAL_SIZE
-            j = (y - START_Y) // REAL_SIZE
-            if b_objects.get((i, j)) is None:
-                new_bomb = Bomb((i+1/2) * REAL_SIZE + START_X, (j+1/2) * REAL_SIZE + START_Y, i, j)
-                b_objects[(x, y)] = new_bomb
-                allB_objects.add(new_bomb)
+            i, j = self.get_coords()
+            if boxes.get((i, j)) is None:
+                new_bomb = Bomb((i+1/2) * REAL_SIZE + START_X, (j+1/2) * REAL_SIZE + START_Y, i, j, self.player_id, self.current_bomb)
+                bombs[(i, j)] = new_bomb
+                allBombs.add(new_bomb)
                 self.bomb = True
                 self.bomb_count -= 1
+
+    def get_coords(self):
+        x, y = self.rect.center
+        i = (x - START_X) // REAL_SIZE
+        j = (y - START_Y) // REAL_SIZE
+        return i, j
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, x, y, xcoord, ycoord):
@@ -153,12 +167,14 @@ class Floor(pygame.sprite.Sprite):
 
 #jak gracz kladzie bombe to do czasu zejscia z niej ma jakas flage, jak zejdzie to sie przelacza i nie moze chodzic po bombie/ trzeba rozpatrzec aby nie mogl przejsc z jednej na druga
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord):
+    def __init__(self, x, y, xcoord, ycoord, player_id, number):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("bomb_1.png", BOMB_SCALE)
         self.rect.center = (x, y)
         self.xcoord = xcoord
         self.ycoord = ycoord
+        self.player_id = player_id
+        self.number = number
 
     def explode(self):
         pass
@@ -186,10 +202,10 @@ def load_png(name, scale: float = 1):
     return image, image.get_rect()
 
 
-def initialize_board(chance=0.9):
+def initialize_board(chance=0.1):
     walls_arr = []
     floors_arr = []
-    b_objects_dir = {}
+    boxes_dir = {}
 
     for i in range(N):
         for j in range(N):
@@ -200,9 +216,9 @@ def initialize_board(chance=0.9):
             else:
                 floors_arr.append(Floor(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j))
                 if (2 < i < N - 3 or 2 < j < N - 3) and random.random() <= chance:
-                    b_objects_dir[(i, j)] = Box(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
+                    boxes_dir[(i, j)] = Box(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
 
-    return walls_arr, floors_arr, b_objects_dir
+    return walls_arr, floors_arr, boxes_dir
 
 
 if __name__ == "__main__":
@@ -215,10 +231,12 @@ if __name__ == "__main__":
     pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
 
-    walls, floors, b_objects = initialize_board()
+    bombs = {}
+    walls, floors, boxes = initialize_board()
     allWalls = pygame.sprite.RenderPlain(walls)
     allFloors = pygame.sprite.RenderPlain(floors)
-    allB_objects = pygame.sprite.RenderPlain(list(b_objects.values()))
+    allBoxes = pygame.sprite.RenderPlain(list(boxes.values()))
+    allBombs = pygame.sprite.RenderPlain(list(bombs.values()))
     player = Player(START_X+(3*REAL_SIZE)/2, START_Y+(3*REAL_SIZE)/2)
 
     allPlayers = pygame.sprite.RenderPlain([player])
@@ -248,9 +266,14 @@ if __name__ == "__main__":
             player.place_bomb()
 
         screen.fill((47, 47, 46))
+
+        font = pygame.font.Font(None, 36)
+        text = font.render(f'Bomb status: {player.bomb}, Bomb Count: {player.bomb_count}', True, (255, 255, 255))
+        screen.blit(text, (10, 10))
         allWalls.draw(screen)
         allFloors.draw(screen)
-        allB_objects.draw(screen)
+        allBoxes.draw(screen)
+        allBombs.draw(screen)
         allPlayers.draw(screen)
         pygame.display.flip()
         clock.tick(60)
