@@ -7,6 +7,8 @@ from global_variables import (COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, BLOCK_SCALE,
 
 
 class Player(pygame.sprite.Sprite):
+    id_counter = 0
+
     def __init__(self, x, y, player_id=0):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("idle-front.png", PLAYER_SCALE)
@@ -15,11 +17,12 @@ class Player(pygame.sprite.Sprite):
         self.direction = "S"
         self.animation = 1
         self.cooldown = COOLDOWN
-        self.player_id = player_id
+        self.player_id = Player.id_counter
+        Player.id_counter += 1
         self.bomb = False
         self.bomb_count = 10
         self.current_bomb = 0
-        self.bomb_strength = 3
+        self.bomb_strength = 2
 
     def update(self):
         pass
@@ -180,6 +183,7 @@ class Bomb(pygame.sprite.Sprite):
         self.placement_time = pygame.time.get_ticks()
         self.countdown = BOMB_COUNTDOWN
         self.strength = strength
+        self.state = False
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -191,6 +195,9 @@ class Bomb(pygame.sprite.Sprite):
             self.image, _ = load_png("bomb_2.png", BOMB_SCALE)
 
     def explode(self):
+        if self.state:
+            return
+        self.state = True
         s_x = max(1, self.xcoord - self.strength)
         f_x = min(N, self.xcoord + self.strength + 1)
         s_y = max(1, self.ycoord - self.strength)
