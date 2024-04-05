@@ -1,15 +1,17 @@
 import pygame
 import os
 import random
-
+import sys
 from global_variables import (COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, BLOCK_SCALE, WINDOW_WIDTH, WINDOW_HEIGHT, N,
                               START_X, START_Y, REAL_SIZE, BOMB_SCALE, BOMB_COUNTDOWN)
+
+PLAYERS = 3
 
 
 class Player(pygame.sprite.Sprite):
     id_counter = 0
 
-    def __init__(self, x, y, player_id=0):
+    def __init__(self, x, y, k, player_id=0):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("idle-front.png", PLAYER_SCALE)
         self.rect.center = (x, y)
@@ -23,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.bomb_count = 10
         self.current_bomb = 0
         self.bomb_strength = 2
+        self.keys = k
 
     def update(self):
         pass
@@ -140,7 +143,8 @@ class Player(pygame.sprite.Sprite):
         if not self.bomb and self.bomb_count > 0:
             i, j = self.get_coords()
             if boxes.get((i, j)) is None and bombs.get((i, j)) is None:
-                new_bomb = Bomb((i+1/2) * REAL_SIZE + START_X, (j+1/2) * REAL_SIZE + START_Y, i, j, self.player_id, self.current_bomb, self.bomb_strength)
+                new_bomb = Bomb((i + 1 / 2) * REAL_SIZE + START_X, (j + 1 / 2) * REAL_SIZE + START_Y, i, j,
+                                self.player_id, self.current_bomb, self.bomb_strength)
                 bombs[(i, j)] = new_bomb
                 allBombs.add(new_bomb)
                 self.bomb = True
@@ -256,9 +260,9 @@ def initialize_board(chance=0.9):
     for i in range(N):
         for j in range(N):
             if i == 0 or i == N - 1 or j == 0 or j == N - 1:
-                walls_dir[(i,j)] = Wall(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
+                walls_dir[(i, j)] = Wall(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
             elif i % 2 == 0 and j % 2 == 0:
-                walls_dir[(i,j)] = Wall(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
+                walls_dir[(i, j)] = Wall(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
             else:
                 floors_arr.append(Floor(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j))
                 if (2 < i < N - 3 or 2 < j < N - 3) and random.random() <= chance:
@@ -269,13 +273,10 @@ def initialize_board(chance=0.9):
 
 if __name__ == "__main__":
     pygame.init()
-
-    pygame.display.set_caption("Bomberman")
-
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     icon = pygame.image.load("images/icon.png")
-    pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
+    pygame.display.set_icon(icon)
 
     bombs = {}
     walls, floors, boxes = initialize_board()
@@ -283,9 +284,29 @@ if __name__ == "__main__":
     allFloors = pygame.sprite.RenderPlain(floors)
     allBoxes = pygame.sprite.RenderPlain(list(boxes.values()))
     allBombs = pygame.sprite.RenderPlain(list(bombs.values()))
-    player = Player(START_X+(3*REAL_SIZE)/2, START_Y+(3*REAL_SIZE)/2)
 
-    allPlayers = pygame.sprite.RenderPlain([player])
+    player1 = Player(START_X + (3 * REAL_SIZE) / 2, START_Y + (3 * REAL_SIZE) / 2,
+                     [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE])
+    list_of_players = [player1]
+    if PLAYERS > 1:
+        player2 = Player(START_X + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
+                         START_Y + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
+                         [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_RCTRL])
+        list_of_players.append(player2)
+
+    if PLAYERS > 2:
+        player3 = Player(START_X + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
+                         START_Y + (3 * REAL_SIZE) / 2,
+                         [pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_RSHIFT])
+        list_of_players.append(player3)
+
+    if PLAYERS > 3:
+        player4 = Player(START_X + (3 * REAL_SIZE) / 2,
+                         START_Y + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
+                         [pygame.K_KP8, pygame.K_KP5, pygame.K_KP4, pygame.K_KP6, pygame.K_KP0])
+        list_of_players.append(player4)
+
+    allPlayers = pygame.sprite.RenderPlain(list_of_players)
     running = True
 
     while running:
@@ -295,26 +316,29 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_SPACE:
-                    player.place_bomb()
+
         keys = pygame.key.get_pressed()
-        direction = ''
-        if keys[pygame.K_w]:
-            direction += 'W'
-        if keys[pygame.K_s]:
-            direction += 'S'
-        if keys[pygame.K_a]:
-            direction += 'A'
-        if keys[pygame.K_d]:
-            direction += 'D'
-        if direction:
-            player.move(direction)
+
+        for player in allPlayers:
+            pressed = ''
+            a, b, c, d, e = player.keys
+            if keys[a]:
+                pressed += 'W'
+            if keys[b]:
+                pressed += 'S'
+            if keys[c]:
+                pressed += 'A'
+            if keys[d]:
+                pressed += 'D'
+            if keys[e]:
+                player.place_bomb()
+            if pressed:
+                player.move(pressed)
 
         screen.fill((47, 47, 46))
         allBombs.update()
         font = pygame.font.Font(None, 36)
-        text = font.render(f'Bomb status: {player.bomb}, Bomb Count: {player.bomb_count}', True, (255, 255, 255))
+        text = font.render(f'Bomb status: {player1.bomb}, Bomb Count: {player1.bomb_count}', True, (255, 255, 255))
         screen.blit(text, (10, 10))
         allWalls.draw(screen)
         allFloors.draw(screen)
