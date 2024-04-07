@@ -198,6 +198,39 @@ class Bomb(pygame.sprite.Sprite):
         else:
             self.image, _ = load_png("bomb_2.png", BOMB_SCALE)
 
+    # def explode(self):
+    #     if self.state:
+    #         return
+    #     self.state = True
+    #     s_x = max(1, self.xcoord - self.strength)
+    #     f_x = min(N, self.xcoord + self.strength + 1)
+    #     s_y = max(1, self.ycoord - self.strength)
+    #     f_y = min(N, self.ycoord + self.strength + 1)
+    #     for i in range(s_x, f_x):
+    #         if i == self.xcoord:
+    #             for j in range(s_y, f_y):
+    #                 if j == self.ycoord:
+    #                     continue
+    #                 if walls.get((i, j)) is not None:
+    #                     break
+    #                 if boxes.get((i, j)) is not None:
+    #                     boxes.get((i, j)).kill()
+    #                     del boxes[(i, j)]
+    #                 if bombs.get((i, j)) is not None:
+    #                     bombs[(i, j)].explode()
+    #         else:
+    #             if walls.get((i, self.ycoord)) is not None:
+    #                 break
+    #             if boxes.get((i, self.ycoord)) is not None:
+    #                 boxes.get((i, self.ycoord)).kill()
+    #                 del boxes[(i, self.ycoord)]
+    #             if bombs.get((i, self.ycoord)) is not None:
+    #                 bombs[(i, self.ycoord)].explode()
+    #     del bombs[(self.xcoord, self.ycoord)]
+    #     new_explosion = explosion(*self.rect.center)
+    #     explosions[self.rect.center] = new_explosion
+    #     allExplosions.add(new_explosion)
+    #     self.kill()
     def explode(self):
         if self.state:
             return
@@ -218,6 +251,9 @@ class Bomb(pygame.sprite.Sprite):
                         del boxes[(i, j)]
                     if bombs.get((i, j)) is not None:
                         bombs[(i, j)].explode()
+                    new_explosion = explosion((i + 1 / 2) * REAL_SIZE + START_X, (j + 1 / 2) * REAL_SIZE + START_Y)
+                    explosions[(i, j)] = new_explosion
+                    allExplosions.add(new_explosion)
             else:
                 if walls.get((i, self.ycoord)) is not None:
                     break
@@ -226,8 +262,32 @@ class Bomb(pygame.sprite.Sprite):
                     del boxes[(i, self.ycoord)]
                 if bombs.get((i, self.ycoord)) is not None:
                     bombs[(i, self.ycoord)].explode()
+                new_explosion = explosion((i + 1 / 2) * REAL_SIZE + START_X, (self.ycoord + 1 / 2) * REAL_SIZE + START_Y)
+                explosions[(i, self.ycoord)] = new_explosion
+                allExplosions.add(new_explosion)
         del bombs[(self.xcoord, self.ycoord)]
+        new_explosion = explosion(*self.rect.center)
+        explosions[self.rect.center] = new_explosion
+        allExplosions.add(new_explosion)
         self.kill()
+
+class explosion(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_png("explosion1.png", BLOCK_SCALE)
+        self.rect.center = (x, y)
+        self.time = pygame.time.get_ticks()
+        self.countdown = 400  # ?
+        self.state = False  # ?
+
+    def update(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.time >= self.countdown:
+            self.kill()
+        if (current_time - self.time) >= self.countdown /2:
+            self.image, _ = load_png("explosion3.png", BLOCK_SCALE)
+        else:
+            self.image, _ = load_png("explosion2.png", BLOCK_SCALE)
 
 
 class Box(pygame.sprite.Sprite):
@@ -279,11 +339,13 @@ if __name__ == "__main__":
     pygame.display.set_icon(icon)
 
     bombs = {}
+    explosions = {}
     walls, floors, boxes = initialize_board()
     allWalls = pygame.sprite.RenderPlain(list(walls.values()))
     allFloors = pygame.sprite.RenderPlain(floors)
     allBoxes = pygame.sprite.RenderPlain(list(boxes.values()))
     allBombs = pygame.sprite.RenderPlain(list(bombs.values()))
+    allExplosions = pygame.sprite.RenderPlain(list(explosions.values()))
 
     player1 = Player(START_X + (3 * REAL_SIZE) / 2, START_Y + (3 * REAL_SIZE) / 2,
                      [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE])
@@ -345,6 +407,9 @@ if __name__ == "__main__":
         allBoxes.draw(screen)
         allBombs.draw(screen)
         allPlayers.draw(screen)
+        allExplosions.draw(screen)
+        allExplosions.update()
+        # print(allExplosions)
         pygame.display.flip()
         clock.tick(60)
 
