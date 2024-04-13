@@ -1,11 +1,11 @@
 import pygame
-import os
-import random
-import sys
-from global_variables import (COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, BLOCK_SCALE, WINDOW_WIDTH, WINDOW_HEIGHT, N,
-                              START_X, START_Y, REAL_SIZE, BOMB_SCALE, BOMB_COUNTDOWN)
 
-PLAYERS = 3
+from explosion import Explosion
+from global_variables import (COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, N,
+                              START_X, START_Y, REAL_SIZE, BOMB_SCALE, BOMB_COUNTDOWN, PLAYERS)
+from loadpng import load_png
+from mapgenerator import initialize_board
+from textrender import render
 
 
 class Player(pygame.sprite.Sprite):
@@ -157,24 +157,6 @@ class Player(pygame.sprite.Sprite):
         return i, j
 
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord):
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("floor.png", BLOCK_SCALE)
-        self.rect.topleft = (x, y)
-        self.xcoord = xcoord
-        self.ycoord = ycoord
-
-
-class Floor(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord):
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("fl.png", BLOCK_SCALE)
-        self.rect.topleft = (x, y)
-        self.xcoord = xcoord
-        self.ycoord = ycoord
-
-
 class Bomb(pygame.sprite.Sprite):
     def __init__(self, x, y, xcoord, ycoord, player_id, number, strength):
         pygame.sprite.Sprite.__init__(self)
@@ -198,39 +180,6 @@ class Bomb(pygame.sprite.Sprite):
         else:
             self.image, _ = load_png("bomb_2.png", BOMB_SCALE)
 
-    # def explode(self):
-    #     if self.state:
-    #         return
-    #     self.state = True
-    #     s_x = max(1, self.xcoord - self.strength)
-    #     f_x = min(N, self.xcoord + self.strength + 1)
-    #     s_y = max(1, self.ycoord - self.strength)
-    #     f_y = min(N, self.ycoord + self.strength + 1)
-    #     for i in range(s_x, f_x):
-    #         if i == self.xcoord:
-    #             for j in range(s_y, f_y):
-    #                 if j == self.ycoord:
-    #                     continue
-    #                 if walls.get((i, j)) is not None:
-    #                     break
-    #                 if boxes.get((i, j)) is not None:
-    #                     boxes.get((i, j)).kill()
-    #                     del boxes[(i, j)]
-    #                 if bombs.get((i, j)) is not None:
-    #                     bombs[(i, j)].explode()
-    #         else:
-    #             if walls.get((i, self.ycoord)) is not None:
-    #                 break
-    #             if boxes.get((i, self.ycoord)) is not None:
-    #                 boxes.get((i, self.ycoord)).kill()
-    #                 del boxes[(i, self.ycoord)]
-    #             if bombs.get((i, self.ycoord)) is not None:
-    #                 bombs[(i, self.ycoord)].explode()
-    #     del bombs[(self.xcoord, self.ycoord)]
-    #     new_explosion = explosion(*self.rect.center)
-    #     explosions[self.rect.center] = new_explosion
-    #     allExplosions.add(new_explosion)
-    #     self.kill()
     def explode(self):
         if self.state:
             return
@@ -265,7 +214,7 @@ class Bomb(pygame.sprite.Sprite):
         new_explosion = Explosion(*self.rect.center)
         explosions[self.rect.center] = new_explosion
         allExplosions.add(new_explosion)
-        list_of_players[self.player_id].bomb_count += 1
+        if list_of_players[self.player_id] is not None: list_of_players[self.player_id].bomb_count += 1
         self.kill()
 
     def handle_explosion(self, x, y):
@@ -274,76 +223,23 @@ class Bomb(pygame.sprite.Sprite):
             del boxes[(x, y)]
         elif bombs.get((x, y)) is not None:
             bombs[(x, y)].explode()
+        for i in range(len(list_of_players)):
+            if list_of_players[i] is not None:
+                if list_of_players[i].get_coords() == (x, y):
+                    list_of_players[i].kill()
+                    del list_of_players[i]
+                    list_of_players.insert(i, None)
 
         new_explosion = Explosion((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y)
         explosions[(x, y)] = new_explosion
         allExplosions.add(new_explosion)
 
 
-class Explosion(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("explosion1.png", BLOCK_SCALE)
-        self.rect.center = (x, y)
-        self.time = pygame.time.get_ticks()
-        self.countdown = 400  # ?
-        self.state = False  # ?
-
-    def update(self):
-        current_time = pygame.time.get_ticks()
-        if current_time - self.time >= self.countdown:
-            self.kill()
-        if (current_time - self.time) >= self.countdown / 2:
-            self.image, _ = load_png("explosion3.png", BLOCK_SCALE)
-        else:
-            self.image, _ = load_png("explosion2.png", BLOCK_SCALE)
-
-
-class Box(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord):
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("box3.png", BLOCK_SCALE)
-        self.rect.topleft = (x, y)
-        self.xcoord = xcoord
-        self.ycoord = ycoord
-
-
-def load_png(name, scale: float = 1):
-    fullname = os.path.join("images", name)
-    image = pygame.image.load(fullname)
-    size = image.get_size()
-    size = (int(size[0] * scale), int(size[1] * scale))
-    image = pygame.transform.scale(image, size)
-    if image.get_alpha is None:
-        image = image.convert()
-    else:
-        image = image.convert_alpha()
-    return image, image.get_rect()
-
-
-def initialize_board(chance=0.9):
-    walls_dir = {}
-    floors_arr = []
-    boxes_dir = {}
-
-    for i in range(N):
-        for j in range(N):
-            if i == 0 or i == N - 1 or j == 0 or j == N - 1:
-                walls_dir[(i, j)] = Wall(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
-            elif i % 2 == 0 and j % 2 == 0:
-                walls_dir[(i, j)] = Wall(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
-            else:
-                floors_arr.append(Floor(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j))
-                if (2 < i < N - 3 or 2 < j < N - 3) and random.random() <= chance:
-                    boxes_dir[(i, j)] = Box(START_X + i * REAL_SIZE, START_Y + j * REAL_SIZE, i, j)
-
-    return walls_dir, floors_arr, boxes_dir
-
-
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     icon = pygame.image.load("images/icon.png")
+    pygame.display.set_caption("Bomberman")
     clock = pygame.time.Clock()
     pygame.display.set_icon(icon)
 
@@ -415,8 +311,39 @@ if __name__ == "__main__":
         allPlayers.draw(screen)
         allExplosions.draw(screen)
         allExplosions.update()
-        # print(allExplosions)
+
+        active_players = [player for player in list_of_players if player is not None]
+        if len(active_players) == 1:
+            running = False
+            winner = active_players[0].player_id + 1
+
+            game_over_font = pygame.font.Font(None, 100)
+            player_won = pygame.font.Font(None, 80)
+            font_exit = pygame.font.Font(None, 40)
+            game_over_text = render("GAME OVER", game_over_font, opx=7)
+            player_won_text = render(f"PLAYER {winner} WON", player_won, opx=6)
+            exit_text = render("Press ESC or Space to exit", font_exit, opx=5)
+            game_over_text_rect = game_over_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 100))
+            player_won_text_rect = player_won_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 30))
+            exit_text_rect = exit_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 20))
+            screen.blit(game_over_text, game_over_text_rect)
+            screen.blit(player_won_text, player_won_text_rect)
+            screen.blit(exit_text, exit_text_rect)
+
+            pygame.display.flip()
+
+            while True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
+                            pygame.quit()
+                            quit()
+
         pygame.display.flip()
         clock.tick(60)
 
     pygame.quit()
+
