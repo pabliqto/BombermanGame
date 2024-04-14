@@ -11,10 +11,8 @@ from textrender import render
 class Player(pygame.sprite.Sprite):
     id_counter = 0
 
-    def __init__(self, x, y, k, player_id=0):
+    def __init__(self, x, y, k):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("idle-front.png", PLAYER_SCALE)
-        self.rect.center = (x, y)
         self.speed = PLAYER_SPEED
         self.direction = "S"
         self.animation = 1
@@ -26,6 +24,19 @@ class Player(pygame.sprite.Sprite):
         self.current_bomb = 0
         self.bomb_strength = 2
         self.keys = k
+        if self.player_id == 1:
+            self.color = "blue"
+        elif self.player_id == 2:
+            self.color = "red"
+        elif self.player_id == 3:
+            self.color = "green"
+        else:
+            self.color = ""
+        if self.color:
+            self.image, self.rect = load_png("animations/" + self.color + "/" + self.color + "-idle-front" + ".png", PLAYER_SCALE)
+        else:
+            self.image, self.rect = load_png("animations/yellow/" + self.color + "idle-front.png", PLAYER_SCALE)
+        self.rect.center = (x, y)
 
     def update(self):
         pass
@@ -38,7 +49,10 @@ class Player(pygame.sprite.Sprite):
             direction = "A"
 
         if self.cooldown == 0:
-            pic = 'walk-'
+            if self.color:
+                pic = "animations/" + self.color + "/" + "walk-"
+            else:
+                pic = "animations/yellow/walk-"
             curr_animation = self.animation
 
             if curr_animation == 4:
@@ -57,7 +71,10 @@ class Player(pygame.sprite.Sprite):
 
             if direction != "WS" and direction != "AD":
                 self.animation = curr_animation
-                pic += str(curr_animation) + '.png'
+                if self.color:
+                    pic += str(curr_animation) + '-' + self.color + '.png'
+                else:
+                    pic += str(curr_animation) + '.png'
                 self.image, self.rect = load_png(pic, scale)
             self.cooldown = COOLDOWN
         else:
@@ -67,18 +84,25 @@ class Player(pygame.sprite.Sprite):
         scale = PLAYER_SCALE
         x, y = self.rect.topleft
         if direction != self.direction:
+            if self.color:
+                name = "animations/" + self.color + "/" + self.color + '-idle-'
+            else:
+                name = "animations/yellow/idle-"
+
             if direction == "W":
-                self.image, self.rect = load_png("idle-back.png", scale)
+                name += "back"
             elif direction == "A":
-                self.image, self.rect = load_png("idle-left.png", scale)
+                name += "left"
             elif direction == "S":
-                self.image, self.rect = load_png("idle-front.png", scale)
+                name += "front"
             elif direction == "D":
-                self.image, self.rect = load_png("idle-right.png", scale)
+                name += "right"
             elif direction == "SA" or direction == "WA":
-                self.image, self.rect = load_png("idle-left.png", scale)
+                name += "left"
             elif direction == "SD" or direction == "WD":
-                self.image, self.rect = load_png("idle-right.png", scale)
+                name += "right"
+            name += '.png'
+            self.image, self.rect = load_png(name, scale)
             self.direction = direction
         else:
             self.animation_move(direction)
@@ -160,7 +184,7 @@ class Player(pygame.sprite.Sprite):
 class Bomb(pygame.sprite.Sprite):
     def __init__(self, x, y, xcoord, ycoord, player_id, number, strength):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("bomb_1.png", BOMB_SCALE)
+        self.image, self.rect = load_png("animations/bomb/bomb_1.png", BOMB_SCALE)
         self.rect.center = (x, y)
         self.xcoord = xcoord
         self.ycoord = ycoord
@@ -176,9 +200,9 @@ class Bomb(pygame.sprite.Sprite):
         if current_time - self.placement_time >= self.countdown:
             self.explode()
         if (current_time - self.placement_time) % 400 < 200:
-            self.image, _ = load_png("bomb_3.png", BOMB_SCALE)
+            self.image, _ = load_png("animations/bomb/bomb_3.png", BOMB_SCALE)
         else:
-            self.image, _ = load_png("bomb_2.png", BOMB_SCALE)
+            self.image, _ = load_png("animations/bomb/bomb_2.png", BOMB_SCALE)
 
     def explode(self):
         if self.state:
@@ -238,7 +262,7 @@ class Bomb(pygame.sprite.Sprite):
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    icon = pygame.image.load("images/icon.png")
+    icon = pygame.image.load("images/animations/yellow/idle-front.png")
     pygame.display.set_caption("Bomberman")
     clock = pygame.time.Clock()
     pygame.display.set_icon(icon)
