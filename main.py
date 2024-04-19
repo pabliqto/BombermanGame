@@ -1,12 +1,15 @@
+import random
+
 import pygame
 
+import modifiers
 from explosion import Explosion
 from global_variables import (COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, N,
                               START_X, START_Y, REAL_SIZE, BOMB_SCALE, BOMB_COUNTDOWN, PLAYERS)
 from loadpng import load_png
 from mapgenerator import initialize_board
 from textrender import render
-
+from modifiers import Modifier
 
 class Player(pygame.sprite.Sprite):
     id_counter = 0
@@ -37,6 +40,9 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image, self.rect = load_png("animations/yellow/" + self.color + "idle-front.png", PLAYER_SCALE)
         self.rect.center = (x, y)
+        self.score = 0
+        self.extra_speed = 0
+        self.extra_fire = 0
 
     def update(self):
         pass
@@ -123,11 +129,16 @@ class Player(pygame.sprite.Sprite):
         new_pos = self.rect.copy()
         self.orientation(direction)
 
+        extra = 0
+        if self.extra_speed > 0:
+            self.extra_speed -= 1
+            extra = 2
+
         if "A" in direction:
-            new_pos.x -= self.speed
+            new_pos.x -= self.speed + extra
 
         if "D" in direction:
-            new_pos.x += self.speed
+            new_pos.x += self.speed + extra
 
         if new_pos.collidelist(list(walls.values())) == -1 and new_pos.collidelist(list(boxes.values())) == -1:
             blist = list(bombs.values())
@@ -145,10 +156,10 @@ class Player(pygame.sprite.Sprite):
         new_pos = self.rect.copy()
 
         if "W" in direction:
-            new_pos.y -= self.speed
+            new_pos.y -= self.speed + extra
 
         if "S" in direction:
-            new_pos.y += self.speed
+            new_pos.y += self.speed + extra
 
         if new_pos.collidelist(list(walls.values())) == -1 and new_pos.collidelist(list(boxes.values())) == -1:
             blist = list(bombs.values())
@@ -180,6 +191,14 @@ class Player(pygame.sprite.Sprite):
         j = (y - START_Y) // REAL_SIZE
         return i, j
 
+    def collect_modifier(self, modifier):
+        if modifier.type == "speed":
+            self.extra_speed = modifier.value
+        elif modifier.type == "bomb":
+            self.bomb_count += modifier.value
+        elif modifier.type == "fire":
+            self.extra_fire += modifier.value
+        modifier.kill()
 
 class Bomb(pygame.sprite.Sprite):
     def __init__(self, x, y, xcoord, ycoord, player_id, number, strength):
@@ -208,10 +227,16 @@ class Bomb(pygame.sprite.Sprite):
         if self.state:
             return
         self.state = True
-        s_x = max(1, self.xcoord - self.strength)
-        f_x = min(N, self.xcoord + self.strength + 1)
-        s_y = max(1, self.ycoord - self.strength)
-        f_y = min(N, self.ycoord + self.strength + 1)
+
+        bonus = 0
+        if list_of_players[self.player_id].extra_fire > 0:
+            list_of_players[self.player_id].extra_fire -= 1
+            bonus = 2
+
+        s_x = max(1, self.xcoord - self.strength - bonus)
+        f_x = min(N, self.xcoord + self.strength + 1 + bonus)
+        s_y = max(1, self.ycoord - self.strength - bonus)
+        f_y = min(N, self.ycoord + self.strength + 1 + bonus)
 
         for i in range(self.xcoord, f_x):
             if i != self.xcoord and walls.get((i, self.ycoord)) is not None:
@@ -222,7 +247,6 @@ class Bomb(pygame.sprite.Sprite):
             if i != self.xcoord and walls.get((i, self.ycoord)) is not None:
                 break
             self.handle_explosion(i, self.ycoord)
-
 
         for j in range(self.ycoord, f_y):
             if j != self.ycoord and walls.get((self.xcoord, j)) is not None:
@@ -244,12 +268,18 @@ class Bomb(pygame.sprite.Sprite):
     def handle_explosion(self, x, y):
         if boxes.get((x, y)) is not None:
             boxes.get((x, y)).kill()
+            if list_of_players[self.player_id] is not None: list_of_players[self.player_id].score += 10
             del boxes[(x, y)]
+            if random.random() <= 0.2:
+                new_modifier = Modifier((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y, x, y, random.choice(["speed", "bomb", "fire"]))
+                modifiers[(x, y)] = new_modifier
+                allModifiers.add(new_modifier)
         elif bombs.get((x, y)) is not None:
             bombs[(x, y)].explode()
         for i in range(len(list_of_players)):
             if list_of_players[i] is not None:
                 if list_of_players[i].get_coords() == (x, y):
+                    list_of_players[self.player_id].score += 50
                     list_of_players[i].kill()
                     del list_of_players[i]
                     list_of_players.insert(i, None)
@@ -257,6 +287,16 @@ class Bomb(pygame.sprite.Sprite):
         new_explosion = Explosion((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y)
         explosions[(x, y)] = new_explosion
         allExplosions.add(new_explosion)
+
+def draw_scoreboard(screen, players):
+    font = pygame.font.Font(None, 30)
+    x = WINDOW_WIDTH - 200
+    y = 150
+    for player in players:
+        score_text = f"Player {player.player_id + 1}: {player.score}"
+        score_surface = font.render(score_text, True, (255, 255, 255))  # White color
+        screen.blit(score_surface, (x, y))
+        y += 40
 
 
 if __name__ == "__main__":
@@ -269,12 +309,14 @@ if __name__ == "__main__":
 
     bombs = {}
     explosions = {}
+    modifiers = {}
     walls, floors, boxes = initialize_board()
     allWalls = pygame.sprite.RenderPlain(list(walls.values()))
     allFloors = pygame.sprite.RenderPlain(floors)
     allBoxes = pygame.sprite.RenderPlain(list(boxes.values()))
     allBombs = pygame.sprite.RenderPlain(list(bombs.values()))
     allExplosions = pygame.sprite.RenderPlain(list(explosions.values()))
+    allModifiers = pygame.sprite.RenderPlain(list(modifiers.values()))
 
     player1 = Player(START_X + (3 * REAL_SIZE) / 2, START_Y + (3 * REAL_SIZE) / 2,
                      [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE])
@@ -325,6 +367,9 @@ if __name__ == "__main__":
                 player.place_bomb()
             if pressed:
                 player.move(pressed)
+            hit_list = pygame.sprite.spritecollide(player, allModifiers, False)
+            for hit in hit_list:
+                player.collect_modifier(hit)
 
         screen.fill((47, 47, 46))
         allBombs.update()
@@ -335,8 +380,11 @@ if __name__ == "__main__":
         allPlayers.draw(screen)
         allExplosions.draw(screen)
         allExplosions.update()
+        allModifiers.draw(screen)
 
         active_players = [player for player in list_of_players if player is not None]
+        draw_scoreboard(screen, active_players)
+
         if len(active_players) == 1:
             running = False
             winner = active_players[0].player_id + 1
