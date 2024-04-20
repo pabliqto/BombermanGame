@@ -11,8 +11,9 @@ from mapgenerator import initialize_board
 from textrender import render
 from modifiers import Modifier
 
+
 class Player(pygame.sprite.Sprite):
-    id_counter = 0
+    id_counter = 1
 
     def __init__(self, x, y, k):
         pygame.sprite.Sprite.__init__(self)
@@ -23,15 +24,15 @@ class Player(pygame.sprite.Sprite):
         self.player_id = Player.id_counter
         Player.id_counter += 1
         self.bomb = False
-        self.bomb_count = 10
+        self.bomb_count = 1
         self.current_bomb = 0
         self.bomb_strength = 2
         self.keys = k
-        if self.player_id == 1:
+        if self.player_id == 2:
             self.color = "blue"
-        elif self.player_id == 2:
-            self.color = "red"
         elif self.player_id == 3:
+            self.color = "red"
+        elif self.player_id == 4:
             self.color = "green"
         else:
             self.color = ""
@@ -229,8 +230,8 @@ class Bomb(pygame.sprite.Sprite):
         self.state = True
 
         bonus = 0
-        if list_of_players[self.player_id].extra_fire > 0:
-            list_of_players[self.player_id].extra_fire -= 1
+        if self.player_id in players and players[self.player_id].extra_fire > 0:
+            players[self.player_id].extra_fire -= 1
             bonus = 2
 
         s_x = max(1, self.xcoord - self.strength - bonus)
@@ -262,27 +263,30 @@ class Bomb(pygame.sprite.Sprite):
         new_explosion = Explosion(*self.rect.center)
         explosions[self.rect.center] = new_explosion
         allExplosions.add(new_explosion)
-        if list_of_players[self.player_id] is not None: list_of_players[self.player_id].bomb_count += 1
+        if self.player_id in players: players[self.player_id].bomb_count += 1
         self.kill()
 
     def handle_explosion(self, x, y):
         if boxes.get((x, y)) is not None:
             boxes.get((x, y)).kill()
-            if list_of_players[self.player_id] is not None: list_of_players[self.player_id].score += 10
+            if self.player_id in players:
+                players[self.player_id].score += 10
+
             del boxes[(x, y)]
+
             if random.random() <= 0.2:
                 new_modifier = Modifier((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y, x, y, random.choice(["speed", "bomb", "fire"]))
                 modifiers[(x, y)] = new_modifier
                 allModifiers.add(new_modifier)
+
         elif bombs.get((x, y)) is not None:
             bombs[(x, y)].explode()
-        for i in range(len(list_of_players)):
-            if list_of_players[i] is not None:
-                if list_of_players[i].get_coords() == (x, y):
-                    list_of_players[self.player_id].score += 50
-                    list_of_players[i].kill()
-                    del list_of_players[i]
-                    list_of_players.insert(i, None)
+        for i in list(players.keys()):
+            if players[i] is not None:
+                if players[i].get_coords() == (x, y):
+                    players[self.player_id].score += 50
+                    players[i].kill()
+                    del players[i]
 
         new_explosion = Explosion((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y)
         explosions[(x, y)] = new_explosion
@@ -293,7 +297,7 @@ def draw_scoreboard(screen, players):
     x = WINDOW_WIDTH - 200
     y = 150
     for player in players:
-        score_text = f"Player {player.player_id + 1}: {player.score}"
+        score_text = f"Player {player.player_id}: {player.score}"
         score_surface = font.render(score_text, True, (255, 255, 255))  # White color
         screen.blit(score_surface, (x, y))
         y += 40
@@ -320,26 +324,26 @@ if __name__ == "__main__":
 
     player1 = Player(START_X + (3 * REAL_SIZE) / 2, START_Y + (3 * REAL_SIZE) / 2,
                      [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE])
-    list_of_players = [player1]
+    players = {1: player1}
     if PLAYERS > 1:
         player2 = Player(START_X + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
                          START_Y + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
                          [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_RCTRL])
-        list_of_players.append(player2)
+        players[2] = player2
 
     if PLAYERS > 2:
         player3 = Player(START_X + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
                          START_Y + (3 * REAL_SIZE) / 2,
                          [pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_RSHIFT])
-        list_of_players.append(player3)
+        players[3] = player3
 
     if PLAYERS > 3:
         player4 = Player(START_X + (3 * REAL_SIZE) / 2,
                          START_Y + (N - 3) * REAL_SIZE + (3 * REAL_SIZE) / 2,
                          [pygame.K_KP8, pygame.K_KP5, pygame.K_KP4, pygame.K_KP6, pygame.K_KP0])
-        list_of_players.append(player4)
+        players[4] = player4
 
-    allPlayers = pygame.sprite.RenderPlain(list_of_players)
+    allPlayers = pygame.sprite.RenderPlain(list(players.values()))
     running = True
 
     while running:
@@ -382,12 +386,11 @@ if __name__ == "__main__":
         allExplosions.update()
         allModifiers.draw(screen)
 
-        active_players = [player for player in list_of_players if player is not None]
-        draw_scoreboard(screen, active_players)
+        draw_scoreboard(screen, list(players.values()))
 
-        if len(active_players) == 1:
+        if len(players) == 1:
             running = False
-            winner = active_players[0].player_id + 1
+            winner = list(players.keys())[0]
 
             game_over_font = pygame.font.Font(None, 100)
             player_won = pygame.font.Font(None, 80)
