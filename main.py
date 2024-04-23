@@ -274,7 +274,7 @@ class Bomb(pygame.sprite.Sprite):
 
             del boxes[(x, y)]
 
-            if random.random() <= 0.2:
+            if random.random() <= 0.5:
                 new_modifier = Modifier((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y, x, y, random.choice(["speed", "bomb", "fire"]))
                 modifiers[(x, y)] = new_modifier
                 allModifiers.add(new_modifier)

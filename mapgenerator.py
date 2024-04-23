@@ -6,7 +6,7 @@ from box import Box
 from wall import Wall
 
 
-def initialize_board(chance=0.9):
+def initialize_board(chance=0.7):
     walls_dir = {}
     floors_arr = []
     boxes_dir = {}
