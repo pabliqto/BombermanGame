@@ -51,13 +51,12 @@ if __name__ == "__main__":
             if keys[d]:
                 pressed += 'D'
             if keys[e]:
-                game_board.place_bomb(player.get_player_id())
+                game_board.place_bomb(player.player_id)
             if pressed:
-                game_board.move_player(player.get_player_id(), pressed)
-            # print(game_board.get_modifiers_sprites())
-            # hit_list = pygame.sprite.spritecollide(player, game_board.get_modifiers_sprites(), False)
-            # for hit in hit_list:
-            #     player.collect_modifier(hit)
+                game_board.move_player(player.player_id, pressed)
+            hit_list = pygame.sprite.spritecollide(player, game_board.get_modifiers_sprites(), False)
+            for hit in hit_list:
+                player.collect_modifier(hit)
 
         screen.fill((47, 47, 46))
         game_board.update()

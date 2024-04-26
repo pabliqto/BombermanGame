@@ -1,31 +1,28 @@
-import random
-
 import pygame
 
-from explosion import Explosion
 from global_variables import BOMB_SCALE, BOMB_COUNTDOWN, N, REAL_SIZE, START_X, START_Y
 from loadpng import load_png
-from modifiers import Modifier
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord, player_id, number, strength, board):
+    def __init__(self, xcoord, ycoord, player_id, number, strength, board):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("animations/bomb/bomb_1.png", BOMB_SCALE)
-        self.rect.center = (x, y)
+        self.x = (xcoord + 1 / 2) * REAL_SIZE + START_X
+        self.y = (ycoord + 1 / 2) * REAL_SIZE + START_Y
+        self.rect.center = (self.x, self.y)
         self.xcoord = xcoord
         self.ycoord = ycoord
         self.player_id = player_id
         self.number = number
         self.placement_time = pygame.time.get_ticks()
-        self.countdown = BOMB_COUNTDOWN
         self.strength = strength
         self.state = False
         self.board = board
 
     def update(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.placement_time >= self.countdown:
+        if current_time - self.placement_time >= BOMB_COUNTDOWN:
             self.explode()
         if (current_time - self.placement_time) % 400 < 200:
             self.image, _ = load_png("animations/bomb/bomb_3.png", BOMB_SCALE)
@@ -38,7 +35,7 @@ class Bomb(pygame.sprite.Sprite):
         self.state = True
 
         bonus = 0
-        if self.player_id in self.board.get_players_ids() and self.board.get_player(self.player_id).get_extra_fire() > 0:
+        if self.player_id in self.board.get_players_ids() and self.board.get_player(self.player_id).extra_fire > 0:
             self.board.get_player(self.player_id).change_extra_fire(-1)
             bonus = 2
 

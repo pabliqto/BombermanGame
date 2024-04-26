@@ -2,7 +2,6 @@ import pygame
 
 from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, START_X, START_Y
 from loadpng import load_png
-from bomb import Bomb
 
 
 class Player(pygame.sprite.Sprite):
@@ -111,39 +110,14 @@ class Player(pygame.sprite.Sprite):
     def move(self, rect):
         self.rect = rect
 
-    def change_orientation(self, direction):
-        self.orientation(direction)
-        self.animation_move(direction)
-
-    def get_rect(self):
-        return self.rect
-
-    def get_extra_speed(self):
-        return self.extra_speed
-
     def change_extra_speed(self, value):
         self.extra_speed += value
-
-    def get_speed(self):
-        return self.speed
-
-    def get_bomb_status(self):
-        return self.bomb
-
-    def get_current_bomb(self):
-        return self.current_bomb
 
     def current_bomb_add(self):
         self.current_bomb += 1
 
     def change_bomb_status(self):
         self.bomb = not self.bomb
-
-    def get_player_id(self):
-        return self.player_id
-
-    def get_extra_fire(self):
-        return self.extra_fire
 
     def change_extra_fire(self, value):
         self.extra_fire += value
