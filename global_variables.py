@@ -1,4 +1,4 @@
-IMAGE_SIZE = 16  # pixels
+IMAGE_SIZE = 16  # pixels / resolution of the images
 COOLDOWN = 8
 PLAYER_SCALE = 1.3
 PLAYER_SPEED = 3
@@ -12,5 +12,5 @@ START_Y = (WINDOW_HEIGHT - N * REAL_SIZE) // 2
 BOMB_SCALE = 3
 BOMB_COUNTDOWN = 3000  # milliseconds
 PLAYERS = 4  # >=2
-CHANCE = 0.7
+CHANCE = 0.7  # chance of a box appearing
 

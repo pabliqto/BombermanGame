@@ -1,20 +1,8 @@
 import pygame
 
 from global_variables import (WINDOW_WIDTH, WINDOW_HEIGHT, N, PLAYERS, CHANCE)
-from textrender import render
 from board import Board
-
-
-def draw_scoreboard(screen, players):
-    font = pygame.font.Font(None, 30)
-    x = WINDOW_WIDTH - 200
-    y = 150
-    for player in players:
-        score_text = f"Player {player.player_id}: {player.score}"
-        score_surface = font.render(score_text, True, (255, 255, 255))  # White color
-        screen.blit(score_surface, (x, y))
-        y += 40
-
+from utilities import draw_scoreboard, endgame_text
 
 if __name__ == "__main__":
     pygame.init()
@@ -38,7 +26,7 @@ if __name__ == "__main__":
 
         keys = pygame.key.get_pressed()
 
-        for player in game_board.get_players_sprites():
+        for player in game_board.player_sprites:
 
             pressed = ''
             a, b, c, d, e = player.keys
@@ -54,7 +42,7 @@ if __name__ == "__main__":
                 game_board.place_bomb(player.player_id)
             if pressed:
                 game_board.move_player(player.player_id, pressed)
-            hit_list = pygame.sprite.spritecollide(player, game_board.get_modifiers_sprites(), False)
+            hit_list = pygame.sprite.spritecollide(player, game_board.modifier_sprites, False)
             for hit in hit_list:
                 player.collect_modifier(hit)
 
@@ -64,22 +52,11 @@ if __name__ == "__main__":
 
         draw_scoreboard(screen, game_board.get_players())
 
-        if game_board.end_game():
+        if game_board.endgame():
             running = False
             winner = game_board.get_winner()
 
-            game_over_font = pygame.font.Font(None, 100)
-            player_won = pygame.font.Font(None, 80)
-            font_exit = pygame.font.Font(None, 40)
-            game_over_text = render("GAME OVER", game_over_font, opx=7)
-            player_won_text = render(f"PLAYER {winner} WON", player_won, opx=6)
-            exit_text = render("Press ESC or Space to exit", font_exit, opx=5)
-            game_over_text_rect = game_over_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 100))
-            player_won_text_rect = player_won_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 30))
-            exit_text_rect = exit_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 20))
-            screen.blit(game_over_text, game_over_text_rect)
-            screen.blit(player_won_text, player_won_text_rect)
-            screen.blit(exit_text, exit_text_rect)
+            endgame_text(screen, winner)
 
             pygame.display.flip()
 

@@ -1,25 +1,32 @@
 import pygame
-from global_variables import (COOLDOWN, PLAYER_SCALE, PLAYER_SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, N,
-                              START_X, START_Y, REAL_SIZE, BOMB_SCALE, BOMB_COUNTDOWN, PLAYERS)
-from loadpng import load_png
+from global_variables import REAL_SIZE, BLOCK_SCALE
+from utilities import load_png
+from enum import Enum
+import random
 
-from global_variables import BLOCK_SCALE
+
+class ModifierType(Enum):
+    SPEED = 1
+    BOMB = 2
+    FIRE = 3
+
+
 class Modifier(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord, modifier_type):
+    def __init__(self, x, y, xcoord, ycoord):
         pygame.sprite.Sprite.__init__(self)
-        if modifier_type == "speed":
+        self.type = random.choice(list(ModifierType))
+        if self.type == ModifierType.SPEED:
             self.image, self.rect = load_png("modifiers\\speed.png", BLOCK_SCALE)
             self.value = 240
-        elif modifier_type == "bomb":
+        elif self.type == ModifierType.BOMB:
             self.image, self.rect = load_png("modifiers\\bomb.png", BLOCK_SCALE)
             self.value = 1
-        else:
+        elif self.type == ModifierType.FIRE:
             self.image, self.rect = load_png("modifiers\\fire.png", BLOCK_SCALE)
             self.value = 1
         self.rect.center = (x, y)
         self.xcoord = xcoord
         self.ycoord = ycoord
         self.image = pygame.transform.scale(self.image, (REAL_SIZE, REAL_SIZE))
-        self.type = modifier_type
 
 

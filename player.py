@@ -1,7 +1,8 @@
 import pygame
 
 from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, START_X, START_Y
-from loadpng import load_png
+from utilities import load_png
+from modifiers import ModifierType
 
 
 class Player(pygame.sprite.Sprite):
@@ -36,9 +37,6 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.extra_speed = 0
         self.extra_fire = 0
-
-    def update(self):
-        pass
 
     def animation_move(self, direction):
         scale = PLAYER_SCALE
@@ -132,10 +130,10 @@ class Player(pygame.sprite.Sprite):
         return i, j
 
     def collect_modifier(self, modifier):
-        if modifier.type == "speed":
+        if modifier.type == ModifierType.SPEED:
             self.extra_speed = modifier.value
-        elif modifier.type == "bomb":
+        elif modifier.type == ModifierType.BOMB:
             self.bomb_count += modifier.value
-        elif modifier.type == "fire":
+        elif modifier.type == ModifierType.FIRE:
             self.extra_fire += modifier.value
         modifier.kill()

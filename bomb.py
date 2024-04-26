@@ -1,7 +1,7 @@
 import pygame
 
 from global_variables import BOMB_SCALE, BOMB_COUNTDOWN, N, REAL_SIZE, START_X, START_Y
-from loadpng import load_png
+from utilities import load_png
 
 
 class Bomb(pygame.sprite.Sprite):
@@ -35,7 +35,7 @@ class Bomb(pygame.sprite.Sprite):
         self.state = True
 
         bonus = 0
-        if self.player_id in self.board.get_players_ids() and self.board.get_player(self.player_id).extra_fire > 0:
+        if self.player_id in self.board.players_ids() and self.board.get_player(self.player_id).extra_fire > 0:
             self.board.get_player(self.player_id).change_extra_fire(-1)
             bonus = 2
 

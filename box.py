@@ -1,7 +1,7 @@
 import pygame
 
 from global_variables import BLOCK_SCALE
-from loadpng import load_png
+from utilities import load_png
 
 
 class Box(pygame.sprite.Sprite):

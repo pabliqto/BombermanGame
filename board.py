@@ -25,7 +25,6 @@ class Board:
         self.bomb_sprites.update()
         self.explosion_sprites.update()
         self.modifier_sprites.update()
-        self.player_sprites.update()
 
     def draw(self, screen):
         self.wall_sprites.draw(screen)
@@ -36,22 +35,16 @@ class Board:
         self.player_sprites.draw(screen)
         self.explosion_sprites.draw(screen)
 
-    def get_players_sprites(self):
-        return self.player_sprites
-
-    def get_modifiers_sprites(self):
-        return self.modifier_sprites
-
     def get_players(self):
         return list(self.players.values())
 
-    def get_players_ids(self):
+    def players_ids(self):
         return list(self.players.keys())
 
     def get_player(self, player_id):
         return self.players.get(player_id)
 
-    def end_game(self):
+    def endgame(self):
         return len(self.get_players()) == 1
 
     def get_winner(self):
@@ -59,6 +52,9 @@ class Board:
 
     def is_wall(self, x, y):
         return self.walls.get((x, y)) is not None
+
+    def is_box(self, x, y):
+        return self.boxes.get((x, y)) is not None
 
     def delete_bomb(self, x, y):
         del self.bombs[(x, y)]
@@ -143,7 +139,7 @@ class Board:
                 player.bomb_count -= 1
 
     def handle_explosion(self, x, y, player_id):
-        if self.boxes.get((x, y)) is not None:
+        if self.is_box(x,y):
             self.boxes.get((x, y)).kill()
             if player_id in self.players:
                 self.players[player_id].score += 10
@@ -151,12 +147,13 @@ class Board:
             del self.boxes[(x, y)]
 
             if random.random() <= 0.5:
-                new_modifier = Modifier((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y, x, y, random.choice(["speed", "bomb", "fire"]))
+                new_modifier = Modifier((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y, x, y)
                 self.modifiers[(x, y)] = new_modifier
                 self.modifier_sprites.add(new_modifier)
 
         elif not self.no_bombs(x, y):
             self.bombs[(x, y)].explode()
+
         for i in list(self.players.keys()):
             if self.players[i] is not None:
                 if self.players[i].get_coords() == (x, y):
