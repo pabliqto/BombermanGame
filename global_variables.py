@@ -12,4 +12,5 @@ START_Y = (WINDOW_HEIGHT - N * REAL_SIZE) // 2
 BOMB_SCALE = 3
 BOMB_COUNTDOWN = 3000  # milliseconds
 PLAYERS = 4  # >=2
+CHANCE = 0.7
 
