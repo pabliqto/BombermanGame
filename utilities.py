@@ -1,6 +1,7 @@
 import pygame
 import os
-from global_variables import WINDOW_WIDTH, WINDOW_HEIGHT
+from global_variables import REAL_SIZE
+import resolution as res
 
 # code from https://stackoverflow.com/questions/54363047/how-to-draw-outline-on-the-fontpygame
 
@@ -51,8 +52,8 @@ def render(text, font, gfcolor=pygame.Color('white'), ocolor=(0,0,0), opx=5):
 
 def draw_scoreboard(screen, players):
     font = pygame.font.Font(None, 30)
-    x = WINDOW_WIDTH - 200
-    y = 350
+    x = res.WINDOW_WIDTH - 130
+    y = res.WINDOW_HEIGHT // 2 - 80
     for player in players:
         score_text = f"Player {player.player_id}: {player.score}"
         score_surface = font.render(score_text, True, (255, 255, 255))  # White color
@@ -60,16 +61,16 @@ def draw_scoreboard(screen, players):
         y += 40
 
 
-def endgame_text(screen, winner):
+def endgame_text(screen, winner, window_width, window_height):
     game_over_font = pygame.font.Font(None, 100)
     player_won = pygame.font.Font(None, 80)
     font_exit = pygame.font.Font(None, 40)
     game_over_text = render("GAME OVER", game_over_font, opx=7)
     player_won_text = render(f"PLAYER {winner} WON", player_won, opx=6)
     exit_text = render("Press ESC or Space to exit", font_exit, opx=5)
-    game_over_text_rect = game_over_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 100))
-    player_won_text_rect = player_won_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 30))
-    exit_text_rect = exit_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 20))
+    game_over_text_rect = game_over_text.get_rect(center=(window_width // 2, window_height // 2 - 100))
+    player_won_text_rect = player_won_text.get_rect(center=(window_width // 2, window_height // 2 - 30))
+    exit_text_rect = exit_text.get_rect(center=(window_width // 2, window_height // 2 + 20))
     screen.blit(game_over_text, game_over_text_rect)
     screen.blit(player_won_text, player_won_text_rect)
     screen.blit(exit_text, exit_text_rect)
@@ -86,3 +87,13 @@ def load_png(name, scale: float = 1):
     else:
         image = image.convert_alpha()
     return image, image.get_rect()
+
+
+def calculate_position(x, y):
+    return (x + 1 / 2) * REAL_SIZE + res.START_X, (y + 1 / 2) * REAL_SIZE + res.START_Y
+
+
+def calculate_player_position(x, y):
+    new_x = x - res.OLD_START_X
+    new_y = y - res.OLD_START_Y
+    return res.START_X + new_x, res.START_Y + new_y

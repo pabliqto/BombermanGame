@@ -1,16 +1,14 @@
 import pygame
 
-from global_variables import BOMB_SCALE, BOMB_COUNTDOWN, N, REAL_SIZE, START_X, START_Y
-from utilities import load_png
+from global_variables import BOMB_SCALE, BOMB_COUNTDOWN, N
+from utilities import load_png, calculate_position
 
 
 class Bomb(pygame.sprite.Sprite):
     def __init__(self, xcoord, ycoord, player_id, number, strength, board):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("animations/bomb/bomb_1.png", BOMB_SCALE)
-        self.x = (xcoord + 1 / 2) * REAL_SIZE + START_X
-        self.y = (ycoord + 1 / 2) * REAL_SIZE + START_Y
-        self.rect.center = (self.x, self.y)
+        self.rect.center = (calculate_position(xcoord, ycoord))
         self.xcoord = xcoord
         self.ycoord = ycoord
         self.player_id = player_id

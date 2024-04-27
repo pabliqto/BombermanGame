@@ -2,9 +2,9 @@ import pygame
 import random
 from map_generator import initialize_board
 from bomb import Bomb
-from global_variables import START_X, START_Y, REAL_SIZE
 from explosion import Explosion
 from modifiers import Modifier
+from utilities import calculate_position, calculate_player_position
 
 
 class Board:
@@ -64,7 +64,7 @@ class Board:
             self.players[player_id].give_bomb()
 
     def new_explosion(self, x, y):
-        new_explosion = Explosion((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y)
+        new_explosion = Explosion(*calculate_position(x, y), x, y)
         self.explosions[(x, y)] = new_explosion
         self.explosion_sprites.add(new_explosion)
 
@@ -147,7 +147,7 @@ class Board:
             del self.boxes[(x, y)]
 
             if random.random() <= 0.5:
-                new_modifier = Modifier((x + 1 / 2) * REAL_SIZE + START_X, (y + 1 / 2) * REAL_SIZE + START_Y, x, y)
+                new_modifier = Modifier(*calculate_position(x, y), x, y)
                 self.modifiers[(x, y)] = new_modifier
                 self.modifier_sprites.add(new_modifier)
 
@@ -162,3 +162,25 @@ class Board:
                     del self.players[i]
 
         self.new_explosion(x, y)
+
+    def resize(self):
+        for wall in self.walls.values():
+            wall.rect.center = calculate_position(wall.xcoord, wall.ycoord)
+
+        for floor in self.floors:
+            floor.rect.center = calculate_position(floor.xcoord, floor.ycoord)
+
+        for box in self.boxes.values():
+            box.rect.center = calculate_position(box.xcoord, box.ycoord)
+
+        for bomb in self.bombs.values():
+            bomb.rect.center = calculate_position(bomb.xcoord, bomb.ycoord)
+
+        for explosion in self.explosions.values():
+            explosion.rect.center = calculate_position(explosion.xcoord, explosion.ycoord)
+
+        for modifier in self.modifiers.values():
+            modifier.rect.center = calculate_position(modifier.xcoord, modifier.ycoord)
+
+        for player in self.players.values():
+            player.rect.center = calculate_player_position(*player.rect.center)

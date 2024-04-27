@@ -8,6 +8,6 @@ class Wall(pygame.sprite.Sprite):
     def __init__(self, x, y, xcoord, ycoord):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("wall.png", BLOCK_SCALE)
-        self.rect.topleft = (x, y)
+        self.rect.center = (x, y)
         self.xcoord = xcoord
         self.ycoord = ycoord

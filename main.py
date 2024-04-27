@@ -1,12 +1,22 @@
 import pygame
-
-from global_variables import (WINDOW_WIDTH, WINDOW_HEIGHT, N, PLAYERS, CHANCE)
+import sys
+import ctypes
+from global_variables import N, REAL_SIZE, CHANCE, PLAYERS
+import resolution as res
 from board import Board
 from utilities import draw_scoreboard, endgame_text
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
+    if sys.platform == "win32":
+        HWND = pygame.display.get_wm_info()["window"]
+        SW_MAXIMIZE = 3
+        ctypes.windll.user32.ShowWindow(HWND, SW_MAXIMIZE)
+    res.WINDOW_HEIGHT = pygame.display.Info().current_h
+    res.WINDOW_WIDTH = pygame.display.Info().current_w
+    res.OLD_START_X = res.START_X = (res.WINDOW_WIDTH - N * REAL_SIZE) // 2
+    res.OLD_START_Y = res.START_Y = (res.WINDOW_HEIGHT - N * REAL_SIZE) // 2
     icon = pygame.image.load("images/animations/yellow/idle-front.png")
     pygame.display.set_caption("Bomberman")
     clock = pygame.time.Clock()
@@ -20,6 +30,14 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.VIDEORESIZE:
+                res.OLD_START_X = res.START_X
+                res.OLD_START_Y = res.START_Y
+                res.WINDOW_WIDTH = event.w
+                res.WINDOW_HEIGHT = event.h
+                res.START_X = (res.WINDOW_WIDTH - N * REAL_SIZE) // 2
+                res.START_Y = (res.WINDOW_HEIGHT - N * REAL_SIZE) // 2
+                game_board.resize()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
@@ -56,7 +74,7 @@ if __name__ == "__main__":
             running = False
             winner = game_board.get_winner()
 
-            endgame_text(screen, winner)
+            endgame_text(screen, winner, pygame.display.Info().current_w, pygame.display.Info().current_h)
 
             pygame.display.flip()
 

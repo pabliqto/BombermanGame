@@ -1,8 +1,9 @@
 import pygame
 
-from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, START_X, START_Y
+from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE
 from utilities import load_png
 from modifiers import ModifierType
+import resolution as res
 
 
 class Player(pygame.sprite.Sprite):
@@ -125,8 +126,8 @@ class Player(pygame.sprite.Sprite):
 
     def get_coords(self):
         x, y = self.rect.center
-        i = (x - START_X) // REAL_SIZE
-        j = (y - START_Y) // REAL_SIZE
+        i = (x - res.START_X) // REAL_SIZE
+        j = (y - res.START_Y) // REAL_SIZE
         return i, j
 
     def collect_modifier(self, modifier):
