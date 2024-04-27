@@ -22,6 +22,7 @@ class Board:
         self.player_sprites = pygame.sprite.RenderPlain(list(self.players.values()))
         self.extra_bomb_chance = extra_bomb_chance
         self.modifier_chance = modifier_chance
+        self.scoreboard = {i: 0 for i in range(1, players_count+1)}
 
     def update(self):
         self.bomb_sprites.update()
@@ -143,8 +144,7 @@ class Board:
     def handle_explosion(self, x, y, player_id):
         if self.is_box(x, y):
             self.boxes.get((x, y)).kill()
-            if player_id in self.players:
-                self.players[player_id].score += 10
+            self.scoreboard[player_id] += 10
 
             del self.boxes[(x, y)]
 
@@ -166,7 +166,8 @@ class Board:
         for i in list(self.players.keys()):
             if self.players[i] is not None:
                 if self.players[i].get_coords() == (x, y):
-                    self.players[player_id].score += 50
+                    if i != player_id:
+                        self.scoreboard[player_id] += 50
                     self.players[i].kill()
                     del self.players[i]
 

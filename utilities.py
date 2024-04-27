@@ -50,12 +50,12 @@ def render(text, font, gfcolor=pygame.Color('white'), ocolor=(0,0,0), opx=5):
 # end of stackoverflow code
 
 
-def draw_scoreboard(screen, players):
+def draw_scoreboard(screen, scoreboard):
     font = pygame.font.Font(None, 30)
     x = res.WINDOW_WIDTH - 130
     y = res.WINDOW_HEIGHT // 2 - 80
-    for player in players:
-        score_text = f"Player {player.player_id}: {player.score}"
+    for player_id, score in scoreboard.items():
+        score_text = f"Player {player_id}: {score}"
         score_surface = font.render(score_text, True, (255, 255, 255))  # White color
         screen.blit(score_surface, (x, y))
         y += 40

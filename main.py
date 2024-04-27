@@ -81,7 +81,7 @@ if __name__ == "__main__":
         game_board.update()
         game_board.draw(screen)
 
-        draw_scoreboard(screen, game_board.get_players())
+        draw_scoreboard(screen, game_board.scoreboard)
 
         # Endgame
         if game_board.endgame():
@@ -92,4 +92,3 @@ if __name__ == "__main__":
         clock.tick(60)
 
     pygame.quit()
-
