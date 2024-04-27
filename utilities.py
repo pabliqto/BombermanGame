@@ -149,7 +149,6 @@ def draw_player_info(screen, player, player_id):
         speed_text_rect.center = (speed_rect.centerx + direction * speed_rect.width, speed_rect.centery)
         radius_text_rect.center = (radius_rect.centerx + direction * radius_rect.width, radius_rect.centery)
 
-        screen.blit(head_image, head_rect)
         screen.blit(bomb_image, bomb_rect)
         screen.blit(radius_image, radius_rect)
         screen.blit(speed_image, speed_rect)
@@ -157,5 +156,4 @@ def draw_player_info(screen, player, player_id):
         screen.blit(bomb_count_text_surface, bomb_count_text_rect)
         screen.blit(speed_text_surface, speed_text_rect)
         screen.blit(radius_text_surface, radius_text_rect)
-    else:
-        screen.blit(head_image, head_rect)
+    screen.blit(head_image, head_rect)
