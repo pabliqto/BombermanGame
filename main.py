@@ -44,25 +44,26 @@ if __name__ == "__main__":
 
         keys = pygame.key.get_pressed()
 
-        for player in game_board.player_sprites:
+        if not game_board.endgame():
+            for player in game_board.player_sprites:
 
-            pressed = ''
-            a, b, c, d, e = player.keys
-            if keys[a]:
-                pressed += 'W'
-            if keys[b]:
-                pressed += 'S'
-            if keys[c]:
-                pressed += 'A'
-            if keys[d]:
-                pressed += 'D'
-            if keys[e]:
-                game_board.place_bomb(player.player_id)
-            if pressed:
-                game_board.move_player(player.player_id, pressed)
-            hit_list = pygame.sprite.spritecollide(player, game_board.modifier_sprites, False)
-            for hit in hit_list:
-                player.collect_modifier(hit)
+                pressed = ''
+                a, b, c, d, e = player.keys
+                if keys[a]:
+                    pressed += 'W'
+                if keys[b]:
+                    pressed += 'S'
+                if keys[c]:
+                    pressed += 'A'
+                if keys[d]:
+                    pressed += 'D'
+                if keys[e]:
+                    game_board.place_bomb(player.player_id)
+                if pressed:
+                    game_board.move_player(player.player_id, pressed)
+                hit_list = pygame.sprite.spritecollide(player, game_board.modifier_sprites, False)
+                for hit in hit_list:
+                    player.collect_modifier(hit)
 
         screen.fill((47, 47, 46))
         game_board.update()
@@ -71,22 +72,8 @@ if __name__ == "__main__":
         draw_scoreboard(screen, game_board.get_players())
 
         if game_board.endgame():
-            running = False
             winner = game_board.get_winner()
-
-            endgame_text(screen, winner, pygame.display.Info().current_w, pygame.display.Info().current_h)
-
-            pygame.display.flip()
-
-            while True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        quit()
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
-                            pygame.quit()
-                            quit()
+            endgame_text(screen, winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
 
         pygame.display.flip()
         clock.tick(60)
