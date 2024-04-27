@@ -8,12 +8,13 @@ from player import Player
 from utilities import calculate_position
 
 
-def initialize_board(n, chance, players_count):
+def initialize_board(n, box_chance, players_count):
     walls_dir = {}
     floors_arr = []
     boxes_dir = {}
     players_dir = {}
 
+    # Create walls, floors, boxes
     for i in range(n):
         for j in range(n):
             position = calculate_position(i, j)
@@ -23,7 +24,7 @@ def initialize_board(n, chance, players_count):
                 walls_dir[(i, j)] = Wall(*position, i, j)
             else:
                 floors_arr.append(Floor(*position, i, j))
-                if (2 < i < n - 3 or 2 < j < n - 3) and random.random() <= chance:
+                if (2 < i < n - 3 or 2 < j < n - 3) and random.random() <= box_chance:
                     boxes_dir[(i, j)] = Box(*position, i, j)
 
     player_keys = [(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_SPACE),
@@ -33,6 +34,7 @@ def initialize_board(n, chance, players_count):
 
     start_positions = [(1, 1), (n - 2, n - 2), (n - 2, 1), (1, n - 2)]
 
+    # Create players
     for i in range(players_count):
         player = Player(*calculate_position(*start_positions[i]), player_keys[i])
         players_dir[player.player_id] = player

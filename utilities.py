@@ -7,7 +7,7 @@ import resolution as res
 
 _circle_cache = {}
 
-
+# Draw the outline of the game over text
 def _circlepoints(r):
     r = int(round(r))
     if r in _circle_cache:
@@ -89,10 +89,12 @@ def load_png(name, scale: float = 1):
     return image, image.get_rect()
 
 
+# Calculate the positions of the objects in the game
 def calculate_position(x, y):
     return (x + 1 / 2) * REAL_SIZE + res.START_X, (y + 1 / 2) * REAL_SIZE + res.START_Y
 
 
+# Calculate the position of the player
 def calculate_player_position(x, y):
     new_x = x - res.OLD_START_X
     new_y = y - res.OLD_START_Y

@@ -8,8 +8,8 @@ from utilities import calculate_position, calculate_player_position
 
 
 class Board:
-    def __init__(self, n, chance, players_count):
-        self.walls, self.floors, self.boxes, self.players = initialize_board(n, chance, players_count)
+    def __init__(self, n, box_chance, players_count, extra_bomb_chance, modifier_chance):
+        self.walls, self.floors, self.boxes, self.players = initialize_board(n, box_chance, players_count)
         self.bombs = {}
         self.explosions = {}
         self.modifiers = {}
@@ -20,6 +20,8 @@ class Board:
         self.explosion_sprites = pygame.sprite.RenderPlain(list(self.explosions.values()))
         self.modifier_sprites = pygame.sprite.RenderPlain(list(self.modifiers.values()))
         self.player_sprites = pygame.sprite.RenderPlain(list(self.players.values()))
+        self.extra_bomb_chance = extra_bomb_chance
+        self.modifier_chance = modifier_chance
 
     def update(self):
         self.bomb_sprites.update()
@@ -68,6 +70,7 @@ class Board:
         self.explosions[(x, y)] = new_explosion
         self.explosion_sprites.add(new_explosion)
 
+    # check if player can move in the given direction
     def move_player(self, player_id, direction):
         player = self.players[player_id]
         if len(direction) == 4 or direction == 'AD' or direction == 'WS':
@@ -107,8 +110,10 @@ class Board:
 
         self.check_position(player, new_pos)
 
+    # handle player movement around a newly placed bomb and wall and box collision
     def check_position(self, player, new_pos):
-        if new_pos.collidelist(list(self.walls.values())) == -1 and new_pos.collidelist(list(self.boxes.values())) == -1:
+        if new_pos.collidelist(list(self.walls.values())) == -1 and new_pos.collidelist(
+                list(self.boxes.values())) == -1:
             blist = list(self.bombs.values())
             bindex = new_pos.collidelist(blist)
             if not player.bomb and bindex == -1:
@@ -121,9 +126,6 @@ class Board:
                 player.change_bomb_status()
                 player.current_bomb_add()
 
-    def no_boxes(self, x, y):
-        return self.boxes.get((x, y)) is None
-
     def no_bombs(self, x, y):
         return self.bombs.get((x, y)) is None
 
@@ -131,25 +133,32 @@ class Board:
         player = self.players[player_id]
         if not player.bomb and player.bomb_count > 0:
             i, j = player.get_coords()
-            if self.no_boxes(i, j) and self.no_bombs(i, j):
-                new_bomb = Bomb(i, j, player_id, player.current_bomb, player.bomb_strength, self)
+            if not self.is_box(i, j) and self.no_bombs(i, j):
+                new_bomb = Bomb(i, j, self, player.bomb_strength, player_id, player.current_bomb)
                 self.bombs[(i, j)] = new_bomb
                 self.bomb_sprites.add(new_bomb)
                 player.change_bomb_status()
                 player.bomb_count -= 1
 
     def handle_explosion(self, x, y, player_id):
-        if self.is_box(x,y):
+        if self.is_box(x, y):
             self.boxes.get((x, y)).kill()
             if player_id in self.players:
                 self.players[player_id].score += 10
 
             del self.boxes[(x, y)]
 
-            if random.random() <= 0.5:
+            random_number = random.random()
+
+            # modifiers and extra bombs
+            if self.extra_bomb_chance <= random_number <= self.modifier_chance:
                 new_modifier = Modifier(*calculate_position(x, y), x, y)
                 self.modifiers[(x, y)] = new_modifier
                 self.modifier_sprites.add(new_modifier)
+            elif random_number < self.extra_bomb_chance:
+                new_bomb = Bomb(x, y, self)
+                self.bombs[(x, y)] = new_bomb
+                self.bomb_sprites.add(new_bomb)
 
         elif not self.no_bombs(x, y):
             self.bombs[(x, y)].explode()
