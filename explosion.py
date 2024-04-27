@@ -1,17 +1,19 @@
 import pygame
 
 from global_variables import BLOCK_SCALE
-from loadpng import load_png
+from utilities import load_png
 
 
 class Explosion(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, xcoord, ycoord):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("animations/explosion/explosion1.png", BLOCK_SCALE)
         self.rect.center = (x, y)
         self.time = pygame.time.get_ticks()
-        self.countdown = 400  # ?
-        self.state = False  # ?
+        self.countdown = 400
+        self.state = False
+        self.xcoord = xcoord
+        self.ycoord = ycoord
 
     def update(self):
         current_time = pygame.time.get_ticks()
