@@ -32,15 +32,10 @@ class Bomb(pygame.sprite.Sprite):
             return
         self.state = True
 
-        bonus = 0
-        if self.player_id in self.board.players_ids() and self.board.get_player(self.player_id).extra_fire > 0:
-            self.board.get_player(self.player_id).change_extra_fire(-1)
-            bonus = 2
-
-        s_x = max(1, self.xcoord - self.strength - bonus)
-        f_x = min(N, self.xcoord + self.strength + 1 + bonus)
-        s_y = max(1, self.ycoord - self.strength - bonus)
-        f_y = min(N, self.ycoord + self.strength + 1 + bonus)
+        s_x = max(1, self.xcoord - self.strength)
+        f_x = min(N, self.xcoord + self.strength + 1)
+        s_y = max(1, self.ycoord - self.strength)
+        f_y = min(N, self.ycoord + self.strength + 1)
 
         for i in range(self.xcoord, f_x):
             if i != self.xcoord and self.board.is_wall(i, self.ycoord):

@@ -28,6 +28,7 @@ class Board:
         self.bomb_sprites.update()
         self.explosion_sprites.update()
         self.modifier_sprites.update()
+        self.player_sprites.update()
 
     def draw(self, screen):
         self.wall_sprites.draw(screen)
@@ -90,7 +91,6 @@ class Board:
 
         extra = 0
         if player.extra_speed > 0:
-            player.change_extra_speed(-1)
             extra = 2
 
         if "A" in direction:
@@ -135,7 +135,11 @@ class Board:
         if not player.bomb and player.bomb_count > 0:
             i, j = player.get_coords()
             if not self.is_box(i, j) and self.no_bombs(i, j):
-                new_bomb = Bomb(i, j, self, player.bomb_strength, player_id, player.current_bomb)
+                strength = player.bomb_strength
+                if player.extra_fire > 0:
+                    player.change_extra_fire(-1)
+                    strength += 2
+                new_bomb = Bomb(i, j, self, strength, player_id, player.current_bomb)
                 self.bombs[(i, j)] = new_bomb
                 self.bomb_sprites.add(new_bomb)
                 player.change_bomb_status()
@@ -144,7 +148,8 @@ class Board:
     def handle_explosion(self, x, y, player_id):
         if self.is_box(x, y):
             self.boxes.get((x, y)).kill()
-            self.scoreboard[player_id] += 10
+            if player_id in self.players:
+                self.scoreboard[player_id] += 10
 
             del self.boxes[(x, y)]
 
@@ -166,7 +171,7 @@ class Board:
         for i in list(self.players.keys()):
             if self.players[i] is not None:
                 if self.players[i].get_coords() == (x, y):
-                    if i != player_id:
+                    if i != player_id and player_id in self.players:
                         self.scoreboard[player_id] += 50
                     self.players[i].kill()
                     del self.players[i]

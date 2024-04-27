@@ -29,6 +29,10 @@ class Player(pygame.sprite.Sprite):
         self.extra_speed = 0
         self.extra_fire = 0
 
+    def update(self):
+        if self.extra_speed > 0:
+            self.extra_speed -= 1
+
     def animation_move(self, direction):
         if direction == "WD" or direction == "SD":
             direction = "D"
@@ -89,9 +93,6 @@ class Player(pygame.sprite.Sprite):
     def move(self, rect):
         self.rect = rect
 
-    def change_extra_speed(self, value):
-        self.extra_speed += value
-
     def current_bomb_add(self):
         self.current_bomb += 1
 
@@ -112,7 +113,7 @@ class Player(pygame.sprite.Sprite):
 
     def collect_modifier(self, modifier):
         if modifier.type == ModifierType.SPEED:
-            self.extra_speed = modifier.value
+            self.extra_speed += modifier.value
         elif modifier.type == ModifierType.BOMB:
             self.bomb_count += modifier.value
         elif modifier.type == ModifierType.FIRE:

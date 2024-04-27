@@ -4,7 +4,7 @@ import ctypes
 from global_variables import N, REAL_SIZE, BOX_CHANCE, PLAYERS, MODIFIER_CHANCE, EXTRA_BOMB_CHANCE
 import resolution as res
 from board import Board
-from utilities import draw_scoreboard, endgame_text
+from utilities import draw_scoreboard, endgame_text, draw_player_info
 
 if __name__ == "__main__":
     # Initialize pygame
@@ -33,6 +33,7 @@ if __name__ == "__main__":
     game_board = Board(N, BOX_CHANCE, PLAYERS, EXTRA_BOMB_CHANCE, MODIFIER_CHANCE)
 
     running = True
+
     # Main loop
     while running:
         for event in pygame.event.get():
@@ -41,6 +42,8 @@ if __name__ == "__main__":
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    running = False
+                elif event.key == pygame.K_SPACE and game_board.endgame():
                     running = False
 
             # Resize window
@@ -82,6 +85,10 @@ if __name__ == "__main__":
         game_board.draw(screen)
 
         draw_scoreboard(screen, game_board.scoreboard)
+
+        for player_id in range(1, PLAYERS + 1):
+            player = game_board.get_player(player_id)
+            draw_player_info(screen, player, player_id)
 
         # Endgame
         if game_board.endgame():

@@ -17,7 +17,7 @@ class Modifier(pygame.sprite.Sprite):
         self.type = random.choice(list(ModifierType))
         if self.type == ModifierType.SPEED:
             self.image, self.rect = load_png("modifiers\\speed.png", BLOCK_SCALE)
-            self.value = 240
+            self.value = 500
         elif self.type == ModifierType.BOMB:
             self.image, self.rect = load_png("modifiers\\bomb.png", BLOCK_SCALE)
             self.value = 1

@@ -1,5 +1,6 @@
 import pygame
 import os
+from math import ceil
 from global_variables import REAL_SIZE
 import resolution as res
 
@@ -99,3 +100,62 @@ def calculate_player_position(x, y):
     new_x = x - res.OLD_START_X
     new_y = y - res.OLD_START_Y
     return res.START_X + new_x, res.START_Y + new_y
+
+
+def draw_player_info(screen, player, player_id):
+    positions = [(0, 0), (res.WINDOW_WIDTH, res.WINDOW_HEIGHT), (res.WINDOW_WIDTH, 0), (0, res.WINDOW_HEIGHT)]
+    colors = ["yellow", "blue", "red", "green"]
+    pos = ["topleft", "bottomright", "topright", "bottomleft"]
+
+    # If player is dead, show dead head
+    if player is None:
+        head_image, head_rect = load_png(f"heads/{colors[player_id-1]}-head-dead.png", 2.5)
+    else:
+        head_image, head_rect = load_png(f"heads/{player.color}-head.png", 2.5)
+
+    setattr(head_rect, pos[player_id-1], positions[player_id-1])
+
+    # If player is dead, don't show bomb count, speed and radius
+    if player:
+        # Load images
+        bomb_image, bomb_rect = load_png(f"animations/bomb/bomb_1.png", 3)
+        radius_image, radius_rect = load_png(f"modifiers/fire.png", 3)
+        speed_image, speed_rect = load_png(f"modifiers/speed.png", 3)
+
+        # Load text
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(f"Player {player.player_id}", True, (255, 255, 255))
+        bomb_count_text_surface = font.render(f"{player.bomb_count}", True, (255, 255, 255))
+        speed_text_surface = font.render(f"{ceil(player.extra_speed/100)}", True, (255, 255, 255))
+        radius_text_surface = font.render(f"{player.extra_fire}", True, (255, 255, 255))
+
+        # Get text rectangles
+        text_rect = text_surface.get_rect()
+        bomb_count_text_rect = bomb_count_text_surface.get_rect()
+        speed_text_rect = speed_text_surface.get_rect()
+        radius_text_rect = radius_text_surface.get_rect()
+
+        # Set the position of the images and text
+        vertical_offset = head_rect.height if player_id % 2 == 1 else -head_rect.height
+        setattr(bomb_rect, pos[player_id - 1], (positions[player_id - 1][0], positions[player_id - 1][1] + vertical_offset))
+        vertical_offset_radius = bomb_rect.height + 10 if player_id % 2 == 1 else -bomb_rect.height - 10
+        vertical_offset_speed = radius_rect.height + 10 if player_id % 2 == 1 else -radius_rect.height - 10
+        radius_rect.center = bomb_rect.centerx, bomb_rect.centery + vertical_offset_radius
+        speed_rect.center = radius_rect.centerx, radius_rect.centery + vertical_offset_speed
+
+        direction = 1 if player_id in (1, 4) else -1
+        text_rect.center = (head_rect.centerx + direction * (head_rect.width + 10), head_rect.centery)
+        bomb_count_text_rect.center = (bomb_rect.centerx + direction * bomb_rect.width, bomb_rect.centery)
+        speed_text_rect.center = (speed_rect.centerx + direction * speed_rect.width, speed_rect.centery)
+        radius_text_rect.center = (radius_rect.centerx + direction * radius_rect.width, radius_rect.centery)
+
+        screen.blit(head_image, head_rect)
+        screen.blit(bomb_image, bomb_rect)
+        screen.blit(radius_image, radius_rect)
+        screen.blit(speed_image, speed_rect)
+        screen.blit(text_surface, text_rect)
+        screen.blit(bomb_count_text_surface, bomb_count_text_rect)
+        screen.blit(speed_text_surface, speed_text_rect)
+        screen.blit(radius_text_surface, radius_text_rect)
+    else:
+        screen.blit(head_image, head_rect)
