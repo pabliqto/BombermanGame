@@ -5,7 +5,7 @@ from utilities import load_png, calculate_position
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, xcoord, ycoord, board, strength=BOMB_STRENGTH, player_id=5, number=-1):
+    def __init__(self, xcoord, ycoord, controller, strength=BOMB_STRENGTH, player_id=5, number=-1):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("animations/bomb/bomb_1.png", BOMB_SCALE)
         self.rect.center = (calculate_position(xcoord, ycoord))
@@ -16,7 +16,7 @@ class Bomb(pygame.sprite.Sprite):
         self.placement_time = pygame.time.get_ticks()
         self.strength = strength
         self.state = False
-        self.board = board
+        self.controller = controller
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -38,27 +38,27 @@ class Bomb(pygame.sprite.Sprite):
         f_y = min(N, self.ycoord + self.strength + 1)
 
         for i in range(self.xcoord, f_x):
-            if i != self.xcoord and self.board.is_wall(i, self.ycoord):
+            if i != self.xcoord and self.controller.is_wall(i, self.ycoord):
                 break
-            self.board.handle_explosion(i, self.ycoord, self.player_id)
+            self.controller.handle_explosion(i, self.ycoord, self.player_id)
 
         for i in range(self.xcoord, s_x-1, -1):
-            if i != self.xcoord and self.board.is_wall(i, self.ycoord):
+            if i != self.xcoord and self.controller.is_wall(i, self.ycoord):
                 break
-            self.board.handle_explosion(i, self.ycoord, self.player_id)
+            self.controller.handle_explosion(i, self.ycoord, self.player_id)
 
         for j in range(self.ycoord, f_y):
-            if j != self.ycoord and self.board.is_wall(self.xcoord, j):
+            if j != self.ycoord and self.controller.is_wall(self.xcoord, j):
                 break
-            self.board.handle_explosion(self.xcoord, j, self.player_id)
+            self.controller.handle_explosion(self.xcoord, j, self.player_id)
 
         for j in range(self.ycoord, s_y-1, -1):
-            if j != self.ycoord and self.board.is_wall(self.xcoord, j):
+            if j != self.ycoord and self.controller.is_wall(self.xcoord, j):
                 break
-            self.board.handle_explosion(self.xcoord, j, self.player_id)
+            self.controller.handle_explosion(self.xcoord, j, self.player_id)
 
-        self.board.delete_bomb(self.xcoord, self.ycoord)
-        self.board.new_explosion(self.xcoord, self.ycoord)
-        self.board.give_bomb(self.player_id)
+        self.controller.delete_bomb(self.xcoord, self.ycoord)
+        self.controller.new_explosion(self.xcoord, self.ycoord)
+        self.controller.give_bomb(self.player_id)
         self.kill()
 

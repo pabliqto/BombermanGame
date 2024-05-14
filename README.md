@@ -11,3 +11,8 @@ Bomberman game in python
 
 
 ![tabela](https://i.imgur.com/2HMfhUN.png)
+
+## Link do plików 
+```
+https://drive.google.com/drive/folders/1gpzibEIw-xvMx7Xo9Rx57lgoypi_3oqx?usp=sharing
+```
