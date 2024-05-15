@@ -1,7 +1,7 @@
 from bomb import Bomb
 
 
-class playerController:
+class player_controller:
     def __init__(self, players, walls, floors, boxes, bombs, explosions, modifiers, game):
         self.players = players
         self.walls = walls

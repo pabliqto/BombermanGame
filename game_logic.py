@@ -1,22 +1,22 @@
-from mapDrawer import mapDrawer
-from playerController import playerController
-from bombController import bombController
+from map_drawer import map_drawer
+from player_controller import player_controller
+from bomb_controller import bomb_controller
 import resolution as res
 from global_variables import N, REAL_SIZE, PLAYERS
-from screenController import screenController
+from screen_controller import screen_controller
 from utilities import draw_scoreboard, endgame_text, draw_player_info
 import pygame
 
 
-class gameLogic:
+class game_logic:
     def __init__(self, screen, walls, floors, boxes, bombs, explosions, modifiers, players):
-        self.playerController = playerController(
+        self.playerController = player_controller(
             players, walls, floors, boxes, bombs, explosions, modifiers, self)
-        self.bombController = bombController(
+        self.bombController = bomb_controller(
             bombs, explosions, players, modifiers, boxes, walls,self)
-        self.mapDrawer = mapDrawer(
+        self.mapDrawer = map_drawer(
             walls, floors, boxes, players, modifiers, bombs, explosions, self)
-        self.screenController = screenController(
+        self.screenController = screen_controller(
             screen, walls, floors, boxes, bombs, explosions, modifiers, players, self)
         self.clock = pygame.time.Clock()
 
@@ -62,7 +62,6 @@ class gameLogic:
             # Game logic
             if not self.endgame():
                 for player in self.mapDrawer.player_sprites:
-
                     pressed = ''
                     a, b, c, d, e = player.keys
                     if keys[a]:

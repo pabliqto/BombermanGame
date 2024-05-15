@@ -7,7 +7,7 @@ from modifiers import Modifier
 from utilities import calculate_position
 
 
-class bombController:
+class bomb_controller:
     def __init__(self, bombs, explosions, players, modifier, boxes, walls, game):
         self.bombs = bombs
         self.explosions = explosions

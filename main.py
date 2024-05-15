@@ -5,7 +5,7 @@ import ctypes
 from global_variables import N, REAL_SIZE, BOX_CHANCE, PLAYERS
 import resolution as res
 from map_generator import initialize_board
-from gameLogic import gameLogic
+from game_logic import game_logic
 
 if __name__ == "__main__":
     # Initialize pygame
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     explosions = {}
     modifiers = {}
 
-    gameLogic = gameLogic(screen, walls, floors, boxes, bombs, explosions, modifiers, players)
+    gameLogic = game_logic(screen, walls, floors, boxes, bombs, explosions, modifiers, players)
     gameLogic.run()
 
     pygame.quit()
