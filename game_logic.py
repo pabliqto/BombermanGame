@@ -1,22 +1,22 @@
-from map_drawer import map_drawer
-from player_controller import player_controller
-from bomb_controller import bomb_controller
+from map_drawer import MapDrawer
+from player_controller import PlayerController
+from bomb_controller import BombController
 import resolution as res
 from global_variables import N, REAL_SIZE, PLAYERS
-from screen_controller import screen_controller
+from screen_controller import ScreenController
 from utilities import draw_scoreboard, endgame_text, draw_player_info
 import pygame
 
 
 class game_logic:
     def __init__(self, screen, walls, floors, boxes, bombs, explosions, modifiers, players):
-        self.playerController = player_controller(
+        self.playerController = PlayerController(
             players, walls, floors, boxes, bombs, explosions, modifiers, self)
-        self.bombController = bomb_controller(
+        self.bombController = BombController(
             bombs, explosions, players, modifiers, boxes, walls,self)
-        self.mapDrawer = map_drawer(
+        self.mapDrawer = MapDrawer(
             walls, floors, boxes, players, modifiers, bombs, explosions, self)
-        self.screenController = screen_controller(
+        self.screenController = ScreenController(
             screen, walls, floors, boxes, bombs, explosions, modifiers, players, self)
         self.clock = pygame.time.Clock()
 
@@ -32,7 +32,7 @@ class game_logic:
     def get_map_drawer(self):
         return self.mapDrawer
 
-    def endgame(self):
+    def check_endgame(self):
         return len(self.playerController.get_players()) == 1
 
     def run(self, running=True):
@@ -44,7 +44,7 @@ class game_logic:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         running = False
-                    elif event.key == pygame.K_SPACE and self.endgame():
+                    elif event.key == pygame.K_SPACE and self.check_endgame():
                         running = False
 
                 # Resize window
@@ -59,8 +59,18 @@ class game_logic:
 
             keys = pygame.key.get_pressed()
 
+            self.screenController.fill()
+            self.mapDrawer.update()
+            self.mapDrawer.draw(self.screenController.get_screen())
+
+            draw_scoreboard(self.screenController.get_screen(), self.mapDrawer.scoreboard)
+
+            for player_id in range(1, PLAYERS + 1):
+                player = self.playerController.get_player(player_id)
+                draw_player_info(self.screenController.get_screen(), player, player_id)
+
             # Game logic
-            if not self.endgame():
+            if not self.check_endgame():
                 for player in self.mapDrawer.player_sprites:
                     pressed = ''
                     a, b, c, d, e = player.keys
@@ -80,19 +90,7 @@ class game_logic:
                     hit_list = pygame.sprite.spritecollide(player, self.mapDrawer.modifier_sprites, False)
                     for hit in hit_list:
                         player.collect_modifier(hit)
-
-            self.screenController.fill()
-            self.mapDrawer.update()
-            self.mapDrawer.draw(self.screenController.get_screen())
-
-            draw_scoreboard(self.screenController.get_screen(), self.mapDrawer.scoreboard)
-
-            for player_id in range(1, PLAYERS + 1):
-                player = self.playerController.get_player(player_id)
-                draw_player_info(self.screenController.get_screen(), player, player_id)
-
-            # Endgame
-            if self.endgame():
+            else:
                 winner = self.playerController.get_winner()
                 endgame_text(self.screenController.get_screen(), winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
 

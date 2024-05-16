@@ -1,7 +1,7 @@
 from bomb import Bomb
 
 
-class player_controller:
+class PlayerController:
     def __init__(self, players, walls, floors, boxes, bombs, explosions, modifiers, game):
         self.players = players
         self.walls = walls
@@ -71,17 +71,11 @@ class player_controller:
 
         self.check_position(player, new_pos)
 
-    def is_box(self, x, y):
-        return self.boxes.get((x, y)) is not None
-
-    def no_bombs(self, x, y):
-        return self.bombs.get((x, y)) is None
-
     def place_bomb(self, player_id):
         player = self.players[player_id]
         if not player.bomb and player.bomb_count > 0:
             i, j = player.get_coords()
-            if not self.is_box(i, j) and self.no_bombs(i, j):
+            if not self.boxes.get((i, j)) and not self.bombs.get((i, j)):
                 strength = player.bomb_strength
                 if player.extra_fire > 0:
                     player.change_extra_fire(-1)

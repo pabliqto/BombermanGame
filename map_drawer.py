@@ -3,7 +3,7 @@ import pygame
 from global_variables import PLAYERS
 
 
-class map_drawer:
+class MapDrawer:
     def __init__(self, walls, floors, boxes, players, modifiers, bombs, explosions, game):
         self.wall_sprites = pygame.sprite.RenderPlain(list(walls.values()))
         self.floor_sprites = pygame.sprite.RenderPlain(floors)

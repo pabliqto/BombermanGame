@@ -1,7 +1,7 @@
 from utilities import calculate_position, calculate_player_position
 
 
-class screen_controller:
+class ScreenController:
     def __init__(self, screen, walls, floors, boxes, bombs, explosions, modifiers, players, game):
         self.screen = screen
         self.walls = walls

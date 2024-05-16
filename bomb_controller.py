@@ -7,7 +7,7 @@ from modifiers import Modifier
 from utilities import calculate_position
 
 
-class bomb_controller:
+class BombController:
     def __init__(self, bombs, explosions, players, modifier, boxes, walls, game):
         self.bombs = bombs
         self.explosions = explosions
@@ -39,7 +39,7 @@ class bomb_controller:
         self.game.get_map_drawer().explosion_sprites.add(new_explosion)
 
     def handle_explosion(self, x, y, player_id):
-        if self.game.get_player_controller().is_box(x, y):
+        if self.game.get_player_controller().boxes.get((x, y)):
             self.boxes.get((x, y)).kill()
             if player_id in self.players:
                 self.game.get_map_drawer().scoreboard[player_id] += 10
@@ -58,7 +58,7 @@ class bomb_controller:
                 self.bombs[(x, y)] = new_bomb
                 self.game.get_map_drawer().bomb_sprites.add(new_bomb)
 
-        elif not self.game.get_player_controller().no_bombs(x, y):
+        elif self.game.get_player_controller().bombs.get((x, y)):
             self.bombs[(x, y)].explode()
 
         for i in list(self.players.keys()):
