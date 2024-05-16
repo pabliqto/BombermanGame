@@ -3,10 +3,10 @@ import pygame
 from global_variables import PLAYERS
 
 
-class map_drawer:
+class MapDrawer:
     def __init__(self, objects):
         self.wall_sprites = pygame.sprite.RenderPlain(list(objects.walls.values()))
-        self.floor_sprites = pygame.sprite.RenderPlain(objects.floors)
+        self.floor_sprites = pygame.sprite.RenderPlain(list(objects.floors.values()))
         self.box_sprites = pygame.sprite.RenderPlain(list(objects.boxes.values()))
         self.bomb_sprites = pygame.sprite.RenderPlain(list(objects.bombs.values()))
         self.explosion_sprites = pygame.sprite.RenderPlain(list(objects.explosions.values()))

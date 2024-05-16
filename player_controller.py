@@ -1,7 +1,7 @@
 from bomb import Bomb
 
 
-class player_controller:
+class PlayerController:
     def __init__(self, objects, bomb_controller, map_drawer):
         self.objects = objects
         self.bomb_controller = bomb_controller

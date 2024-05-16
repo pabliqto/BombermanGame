@@ -7,7 +7,7 @@ from modifiers import Modifier
 from utilities import calculate_position
 
 
-class bomb_controller:
+class BombController:
     def __init__(self, objects, map_drawer):
         self.objects = objects
         self.map_drawer = map_drawer

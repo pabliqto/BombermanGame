@@ -1,20 +1,20 @@
-from map_drawer import map_drawer
-from player_controller import player_controller
-from bomb_controller import bomb_controller
+from map_drawer import MapDrawer
+from player_controller import PlayerController
+from bomb_controller import BombController
 import resolution as res
 from global_variables import N, REAL_SIZE, PLAYERS
-from screen_controller import screen_controller
+from screen_controller import ScreenController
 from utilities import draw_scoreboard, endgame_text, draw_player_info
 import pygame
 
 
-class game_logic:
+class GameLogic:
     def __init__(self, game_objects):
         self.objects = game_objects
-        self.map_drawer = map_drawer(self.objects)
-        self.bomb_controller = bomb_controller(self.objects, self.map_drawer)
-        self.player_controller = player_controller(self.objects, self.bomb_controller, self.map_drawer)
-        self.screen_controller = screen_controller(self.objects)
+        self.map_drawer = MapDrawer(self.objects)
+        self.bomb_controller = BombController(self.objects, self.map_drawer)
+        self.player_controller = PlayerController(self.objects, self.bomb_controller, self.map_drawer)
+        self.screen_controller = ScreenController(self.objects)
 
     def check_endgame(self):
         return len(self.objects.players) == 1

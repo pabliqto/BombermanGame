@@ -1,7 +1,7 @@
-from utilities import calculate_position, calculate_player_position
+from utilities import calculate_position
 
 
-class screen_controller:
+class ScreenController:
     def __init__(self, objects):
         self.objects = objects
 
@@ -9,12 +9,10 @@ class screen_controller:
         self.objects.screen.fill((47, 47, 46))
 
     def resize(self):
-        entities = {**self.objects.walls, **self.objects.boxes,
-                    **self.objects.bombs, **self.objects.explosions, **self.objects.modifiers}
+        entities = [self.objects.walls, self.objects.boxes,
+                    self.objects.bombs, self.objects.explosions, self.objects.modifiers,
+                    self.objects.players, self.objects.floors]
 
-        for entity in entities.values():
-            entity.rect.center = calculate_position(entity.xcoord, entity.ycoord)
-        for player in self.objects.players.values():
-            player.rect.center = calculate_player_position(*player.rect.center)
-        for floor in self.objects.floors:
-            floor.rect.center = calculate_position(floor.xcoord, floor.ycoord)
+        for d in entities:
+            for entity in d.values():
+                entity.rect.center = calculate_position(entity.xcoord, entity.ycoord)

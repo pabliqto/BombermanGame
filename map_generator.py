@@ -10,7 +10,7 @@ from utilities import calculate_position
 
 def initialize_board(n, box_chance, players_count):
     walls_dir = {}
-    floors_arr = []
+    floors_dir = {}
     boxes_dir = {}
     players_dir = {}
 
@@ -23,7 +23,7 @@ def initialize_board(n, box_chance, players_count):
             elif i % 2 == 0 and j % 2 == 0:
                 walls_dir[(i, j)] = Wall(*position, i, j)
             else:
-                floors_arr.append(Floor(*position, i, j))
+                floors_dir[(i, j)] = Floor(*position, i, j)
                 if (2 < i < n - 3 or 2 < j < n - 3) and random.random() <= box_chance:
                     boxes_dir[(i, j)] = Box(*position, i, j)
 
@@ -39,4 +39,4 @@ def initialize_board(n, box_chance, players_count):
         player = Player(*calculate_position(*start_positions[i]), player_keys[i])
         players_dir[player.player_id] = player
 
-    return walls_dir, floors_arr, boxes_dir, players_dir
+    return walls_dir, floors_dir, boxes_dir, players_dir

@@ -1,7 +1,7 @@
 import pygame
 
 from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, BOMB_STRENGTH
-from utilities import load_png
+from utilities import load_png, calculate_player_position
 from modifiers import ModifierType
 import resolution as res
 
@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.extra_speed = 0
         self.extra_fire = 0
+        self.xcoord, self.ycoord = self.get_coords()
 
     def update(self):
         if self.extra_speed > 0:
@@ -92,6 +93,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, rect):
         self.rect = rect
+        self.xcoord, self.ycoord = self.get_coords()
 
     def current_bomb_add(self):
         self.current_bomb += 1

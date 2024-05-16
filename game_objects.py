@@ -4,7 +4,7 @@ from global_variables import N, BOX_CHANCE, PLAYERS
 from map_generator import initialize_board
 
 
-class game_objects:
+class GameObjects:
     def __init__(self, screen):
         self._screen = screen
         self._walls, self._floors, self._boxes, self._players = initialize_board(N, BOX_CHANCE, PLAYERS)
