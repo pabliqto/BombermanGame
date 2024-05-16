@@ -1,40 +1,35 @@
 from bomb import Bomb
 
 
-class PlayerController:
-    def __init__(self, players, walls, floors, boxes, bombs, explosions, modifiers, game):
-        self.players = players
-        self.walls = walls
-        self.floors = floors
-        self.boxes = boxes
-        self.bombs = bombs
-        self.explosions = explosions
-        self.modifiers = modifiers
-        self.game = game
+class player_controller:
+    def __init__(self, objects, bomb_controller, map_drawer):
+        self.objects = objects
+        self.bomb_controller = bomb_controller
+        self.map_drawer = map_drawer
 
     def update(self):
-        for player in self.players.values():
+        for player in self.objects.players.values():
             player.update()
 
     def get_players(self):
-        return list(self.players.values())
+        return list(self.objects.players.values())
 
     def get_player(self, player_id):
-        return self.players.get(player_id)
+        return self.objects.players.get(player_id)
 
     def players_ids(self):
-        return list(self.players.keys())
+        return list(self.objects.players.keys())
 
     def get_winner(self):
-        return list(self.players.keys())[0]
+        return list(self.objects.players.keys())[0]
 
     def give_bomb(self, player_id):
-        if player_id in self.players:
-            self.players[player_id].give_bomb()
+        if player_id in self.objects.players:
+            self.objects.players[player_id].give_bomb()
 
     # check if player can move in the given direction
     def move_player(self, player_id, direction):
-        player = self.players[player_id]
+        player = self.objects.players[player_id]
         if len(direction) == 4 or direction == 'AD' or direction == 'WS':
             return
 
@@ -72,25 +67,25 @@ class PlayerController:
         self.check_position(player, new_pos)
 
     def place_bomb(self, player_id):
-        player = self.players[player_id]
+        player = self.objects.players[player_id]
         if not player.bomb and player.bomb_count > 0:
             i, j = player.get_coords()
-            if not self.boxes.get((i, j)) and not self.bombs.get((i, j)):
+            if not self.objects.boxes.get((i, j)) and not self.objects.bombs.get((i, j)):
                 strength = player.bomb_strength
                 if player.extra_fire > 0:
                     player.change_extra_fire(-1)
                     strength += 2
-                new_bomb = Bomb(i, j, self.game.get_bomb_controller(), strength, player_id, player.current_bomb)
-                self.bombs[(i, j)] = new_bomb
-                self.game.get_map_drawer().add_bomb(new_bomb)
+                new_bomb = Bomb(i, j, self.bomb_controller, strength, player_id, player.current_bomb)
+                self.objects.bombs[(i, j)] = new_bomb
+                self.map_drawer.add_bomb(new_bomb)
                 player.change_bomb_status()
                 player.bomb_count -= 1
 
     # handle player movement around a newly placed bomb and wall and box collision
     def check_position(self, player, new_pos):
-        if new_pos.collidelist(list(self.walls.values())) == -1 and new_pos.collidelist(
-                list(self.boxes.values())) == -1:
-            blist = list(self.bombs.values())
+        if new_pos.collidelist(list(self.objects.walls.values())) == -1 and new_pos.collidelist(
+                list(self.objects.boxes.values())) == -1:
+            blist = list(self.objects.bombs.values())
             bindex = new_pos.collidelist(blist)
             if not player.bomb and bindex == -1:
                 player.move(new_pos)

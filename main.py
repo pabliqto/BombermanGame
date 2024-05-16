@@ -2,6 +2,7 @@ import pygame
 import sys
 import ctypes
 
+from game_objects import game_objects
 from global_variables import N, REAL_SIZE, BOX_CHANCE, PLAYERS
 import resolution as res
 from map_generator import initialize_board
@@ -28,12 +29,8 @@ if __name__ == "__main__":
     pygame.display.set_caption("Bomberman")
     pygame.display.set_icon(icon)
 
-    walls, floors, boxes, players = initialize_board(N, BOX_CHANCE, PLAYERS)
-    bombs = {}
-    explosions = {}
-    modifiers = {}
-
-    gameLogic = game_logic(screen, walls, floors, boxes, bombs, explosions, modifiers, players)
+    game_objects = game_objects(screen)
+    gameLogic = game_logic(game_objects)
     gameLogic.run()
 
     pygame.quit()

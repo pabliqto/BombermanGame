@@ -3,17 +3,16 @@ import pygame
 from global_variables import PLAYERS
 
 
-class MapDrawer:
-    def __init__(self, walls, floors, boxes, players, modifiers, bombs, explosions, game):
-        self.wall_sprites = pygame.sprite.RenderPlain(list(walls.values()))
-        self.floor_sprites = pygame.sprite.RenderPlain(floors)
-        self.box_sprites = pygame.sprite.RenderPlain(list(boxes.values()))
-        self.bomb_sprites = pygame.sprite.RenderPlain(list(bombs.values()))
-        self.explosion_sprites = pygame.sprite.RenderPlain(list(explosions.values()))
-        self.modifier_sprites = pygame.sprite.RenderPlain(list(modifiers.values()))
-        self.player_sprites = pygame.sprite.RenderPlain(list(players.values()))
+class map_drawer:
+    def __init__(self, objects):
+        self.wall_sprites = pygame.sprite.RenderPlain(list(objects.walls.values()))
+        self.floor_sprites = pygame.sprite.RenderPlain(objects.floors)
+        self.box_sprites = pygame.sprite.RenderPlain(list(objects.boxes.values()))
+        self.bomb_sprites = pygame.sprite.RenderPlain(list(objects.bombs.values()))
+        self.explosion_sprites = pygame.sprite.RenderPlain(list(objects.explosions.values()))
+        self.modifier_sprites = pygame.sprite.RenderPlain(list(objects.modifiers.values()))
+        self.player_sprites = pygame.sprite.RenderPlain(list(objects.players.values()))
         self.scoreboard = {i: 0 for i in range(1, PLAYERS + 1)}
-        self.game = game
 
     def add_bomb(self, bomb):
         self.bomb_sprites.add(bomb)

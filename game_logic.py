@@ -1,39 +1,35 @@
-from map_drawer import MapDrawer
-from player_controller import PlayerController
-from bomb_controller import BombController
+from map_drawer import map_drawer
+from player_controller import player_controller
+from bomb_controller import bomb_controller
 import resolution as res
 from global_variables import N, REAL_SIZE, PLAYERS
-from screen_controller import ScreenController
+from screen_controller import screen_controller
 from utilities import draw_scoreboard, endgame_text, draw_player_info
 import pygame
 
 
 class game_logic:
-    def __init__(self, screen, walls, floors, boxes, bombs, explosions, modifiers, players):
-        self.playerController = PlayerController(
-            players, walls, floors, boxes, bombs, explosions, modifiers, self)
-        self.bombController = BombController(
-            bombs, explosions, players, modifiers, boxes, walls,self)
-        self.mapDrawer = MapDrawer(
-            walls, floors, boxes, players, modifiers, bombs, explosions, self)
-        self.screenController = ScreenController(
-            screen, walls, floors, boxes, bombs, explosions, modifiers, players, self)
-        self.clock = pygame.time.Clock()
+    def __init__(self, game_objects):
+        self.objects = game_objects
+        self.map_drawer = map_drawer(self.objects)
+        self.bomb_controller = bomb_controller(self.objects, self.map_drawer)
+        self.player_controller = player_controller(self.objects, self.bomb_controller, self.map_drawer)
+        self.screen_controller = screen_controller(self.objects)
 
     def get_screen_controller(self):
-        return self.screenController
+        return self.screen_controller
 
     def get_player_controller(self):
-        return self.playerController
+        return self.player_controller
 
     def get_bomb_controller(self):
-        return self.bombController
+        return self.bomb_controller
 
     def get_map_drawer(self):
-        return self.mapDrawer
+        return self.map_drawer
 
     def check_endgame(self):
-        return len(self.playerController.get_players()) == 1
+        return len(self.player_controller.get_players()) == 1
 
     def run(self, running=True):
         while running:
@@ -55,23 +51,23 @@ class game_logic:
                     res.WINDOW_HEIGHT = event.h
                     res.START_X = (res.WINDOW_WIDTH - N * REAL_SIZE) // 2
                     res.START_Y = (res.WINDOW_HEIGHT - N * REAL_SIZE) // 2
-                    self.screenController.resize()
+                    self.screen_controller.resize()
 
             keys = pygame.key.get_pressed()
 
-            self.screenController.fill()
-            self.mapDrawer.update()
-            self.mapDrawer.draw(self.screenController.get_screen())
+            self.screen_controller.fill()
+            self.map_drawer.update()
+            self.map_drawer.draw(self.objects.screen)
 
-            draw_scoreboard(self.screenController.get_screen(), self.mapDrawer.scoreboard)
+            draw_scoreboard(self.objects.screen, self.map_drawer.scoreboard)
 
             for player_id in range(1, PLAYERS + 1):
-                player = self.playerController.get_player(player_id)
-                draw_player_info(self.screenController.get_screen(), player, player_id)
+                player = self.player_controller.get_player(player_id)
+                draw_player_info(self.objects.screen, player, player_id)
 
             # Game logic
             if not self.check_endgame():
-                for player in self.mapDrawer.player_sprites:
+                for player in self.map_drawer.player_sprites:
                     pressed = ''
                     a, b, c, d, e = player.keys
                     if keys[a]:
@@ -83,16 +79,16 @@ class game_logic:
                     if keys[d]:
                         pressed += 'D'
                     if keys[e]:
-                        self.playerController.place_bomb(player.player_id)
+                        self.player_controller.place_bomb(player.player_id)
                     if pressed:
-                        self.playerController.move_player(player.player_id, pressed)
+                        self.player_controller.move_player(player.player_id, pressed)
 
-                    hit_list = pygame.sprite.spritecollide(player, self.mapDrawer.modifier_sprites, False)
+                    hit_list = pygame.sprite.spritecollide(player, self.map_drawer.modifier_sprites, False)
                     for hit in hit_list:
                         player.collect_modifier(hit)
             else:
-                winner = self.playerController.get_winner()
-                endgame_text(self.screenController.get_screen(), winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
+                winner = self.player_controller.get_winner()
+                endgame_text(self.objects.screen, winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
 
             pygame.display.flip()
-            self.clock.tick(60)
+            self.objects.clock.tick(60)
