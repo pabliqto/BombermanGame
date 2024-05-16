@@ -111,6 +111,9 @@ class Player(pygame.sprite.Sprite):
         j = (y - res.START_Y) // REAL_SIZE
         return i, j
 
+    def can_place_bomb(self):
+        return not self.bomb and self.bomb_count > 0
+
     def collect_modifier(self, modifier):
         if modifier.type == ModifierType.SPEED:
             self.extra_speed += modifier.value

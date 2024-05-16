@@ -16,20 +16,8 @@ class game_logic:
         self.player_controller = player_controller(self.objects, self.bomb_controller, self.map_drawer)
         self.screen_controller = screen_controller(self.objects)
 
-    def get_screen_controller(self):
-        return self.screen_controller
-
-    def get_player_controller(self):
-        return self.player_controller
-
-    def get_bomb_controller(self):
-        return self.bomb_controller
-
-    def get_map_drawer(self):
-        return self.map_drawer
-
     def check_endgame(self):
-        return len(self.player_controller.get_players()) == 1
+        return len(self.objects.players) == 1
 
     def run(self, running=True):
         while running:
@@ -62,7 +50,7 @@ class game_logic:
             draw_scoreboard(self.objects.screen, self.map_drawer.scoreboard)
 
             for player_id in range(1, PLAYERS + 1):
-                player = self.player_controller.get_player(player_id)
+                player = self.objects.players.get(player_id)
                 draw_player_info(self.objects.screen, player, player_id)
 
             # Game logic

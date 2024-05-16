@@ -34,6 +34,12 @@ class bomb_controller:
         self.map_drawer.add_explosion(new_explosion)
 
     def handle_explosion(self, x, y, player_id):
+        self.resolve_box_explosion(x, y, player_id)
+        self.resolve_bomb_explosion(x, y)
+        self.manage_player_deaths(x, y, player_id)
+        self.new_explosion(x, y)
+
+    def resolve_box_explosion(self, x, y, player_id):
         if self.objects.boxes.get((x, y)):
             self.objects.boxes.get((x, y)).kill()
             if player_id in self.objects.players:
@@ -53,9 +59,11 @@ class bomb_controller:
                 self.objects.bombs[(x, y)] = new_bomb
                 self.map_drawer.bomb_sprites.add(new_bomb)
 
-        elif self.objects.bombs.get((x, y)):
+    def resolve_bomb_explosion(self, x, y):
+        if self.objects.bombs.get((x, y)):
             self.objects.bombs[(x, y)].explode()
 
+    def manage_player_deaths(self, x, y, player_id):
         for i in list(self.objects.players.keys()):
             if self.objects.players[i] is not None:
                 if self.objects.players[i].get_coords() == (x, y):
@@ -63,5 +71,3 @@ class bomb_controller:
                         self.map_drawer.scoreboard[player_id] += 50
                     self.objects.players[i].kill()
                     del self.objects.players[i]
-
-        self.new_explosion(x, y)
