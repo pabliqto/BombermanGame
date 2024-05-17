@@ -2,7 +2,7 @@ import pygame
 import sys
 import ctypes
 
-from game_objects import GameObjects
+from game_objects import GameObjects, GameMap
 from global_variables import N, REAL_SIZE
 import resolution as res
 from game_logic import GameLogic
@@ -28,7 +28,9 @@ if __name__ == "__main__":
     pygame.display.set_caption("Bomberman")
     pygame.display.set_icon(icon)
 
-    game_objects = GameObjects(screen)
+    map_generator = GameMap.RANDOM
+
+    game_objects = GameObjects(screen, map_generator)
     gameLogic = GameLogic(game_objects)
     gameLogic.run()
 

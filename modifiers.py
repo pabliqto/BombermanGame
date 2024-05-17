@@ -1,8 +1,9 @@
 import pygame
+import random
+
 from global_variables import REAL_SIZE, BLOCK_SCALE
 from utilities import load_png
 from enum import Enum
-import random
 
 
 class ModifierType(Enum):

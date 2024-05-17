@@ -1,13 +1,30 @@
 import pygame
 
-from global_variables import N, BOX_CHANCE, PLAYERS
-from map_generator import initialize_board
+from enum import Enum
+from full_board_generator import FullBoardGenerator
+from empty_board_generator import EmptyBoardGenerator
+from random_board_generator import RandomBoardGenerator
+
+
+class GameMap(Enum):
+    FULL = 1
+    EMPTY = 2
+    RANDOM = 3
+
+    def get_map_generator(self):
+        if self == GameMap.FULL:
+            return FullBoardGenerator()
+        elif self == GameMap.EMPTY:
+            return EmptyBoardGenerator()
+        elif self == GameMap.RANDOM:
+            return RandomBoardGenerator()
 
 
 class GameObjects:
-    def __init__(self, screen):
+    def __init__(self, screen, map_type: GameMap):
         self._screen = screen
-        self._walls, self._floors, self._boxes, self._players = initialize_board(N, BOX_CHANCE, PLAYERS)
+        self._map_generator = map_type.get_map_generator()
+        self._walls, self._floors, self._boxes, self._players = self._map_generator.get_map()
         self._bombs = {}
         self._explosions = {}
         self._modifiers = {}
