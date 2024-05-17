@@ -55,7 +55,7 @@ def draw_scoreboard(screen, scoreboard):
     font = pygame.font.Font(None, 30)
     x = res.WINDOW_WIDTH - 130
     y = res.WINDOW_HEIGHT // 2 - 80
-    for player_id, score in scoreboard.items():
+    for player_id, score in scoreboard.score.items():
         score_text = f"Player {player_id}: {score}"
         score_surface = font.render(score_text, True, (255, 255, 255))  # White color
         screen.blit(score_surface, (x, y))
@@ -67,7 +67,10 @@ def endgame_text(screen, winner, window_width, window_height):
     player_won = pygame.font.Font(None, 80)
     font_exit = pygame.font.Font(None, 40)
     game_over_text = render("GAME OVER", game_over_font, opx=7)
-    player_won_text = render(f"PLAYER {winner} WON", player_won, opx=6)
+    if winner is None:
+        player_won_text = render("DRAW", player_won, opx=6)
+    else:
+        player_won_text = render(f"PLAYER {winner} WON", player_won, opx=6)
     exit_text = render("Press ESC or Space to exit", font_exit, opx=5)
     game_over_text_rect = game_over_text.get_rect(center=(window_width // 2, window_height // 2 - 100))
     player_won_text_rect = player_won_text.get_rect(center=(window_width // 2, window_height // 2 - 30))

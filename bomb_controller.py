@@ -8,9 +8,10 @@ from utilities import calculate_position
 
 
 class BombController:
-    def __init__(self, objects, map_drawer):
+    def __init__(self, objects, map_drawer, scoreboard):
         self.objects = objects
         self.map_drawer = map_drawer
+        self.scoreboard = scoreboard
 
     def update(self):
         for bomb in list(self.objects.bombs.values()):
@@ -43,8 +44,7 @@ class BombController:
         if self.objects.boxes.get((x, y)):
             self.objects.boxes.get((x, y)).kill()
             if player_id in self.objects.players:
-                self.map_drawer.scoreboard[player_id] += 10
-
+                self.scoreboard.box_destroyed(player_id)
             del self.objects.boxes[(x, y)]
 
             random_number = random.random()
@@ -64,10 +64,9 @@ class BombController:
             self.objects.bombs[(x, y)].explode()
 
     def manage_player_deaths(self, x, y, player_id):
-        for i in list(self.objects.players.keys()):
-            if self.objects.players[i] is not None:
-                if self.objects.players[i].get_coords() == (x, y):
-                    if i != player_id and player_id in self.objects.players:
-                        self.map_drawer.scoreboard[player_id] += 50
-                    self.objects.players[i].kill()
-                    del self.objects.players[i]
+        for p_id in list(self.objects.players.keys()):
+            if self.objects.players[p_id].get_coords() == (x, y):
+                if player_id not in (p_id, 5):
+                    self.scoreboard.kill_player(player_id)
+                self.objects.players[p_id].kill()
+                del self.objects.players[p_id]

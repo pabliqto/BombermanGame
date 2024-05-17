@@ -1,23 +1,26 @@
-from map_drawer import MapDrawer
-from player_controller import PlayerController
-from bomb_controller import BombController
-import resolution as res
+import pygame
+
+from utilities import draw_scoreboard, endgame_text, draw_player_info
 from global_variables import N, REAL_SIZE, PLAYERS
 from screen_controller import ScreenController
-from utilities import draw_scoreboard, endgame_text, draw_player_info
-import pygame
+from player_controller import PlayerController
+from bomb_controller import BombController
+from map_drawer import MapDrawer
+from scoreboard import Scoreboard
+import resolution as res
 
 
 class GameLogic:
     def __init__(self, game_objects):
         self.objects = game_objects
+        self.scoreboard = Scoreboard()
         self.map_drawer = MapDrawer(self.objects)
-        self.bomb_controller = BombController(self.objects, self.map_drawer)
-        self.player_controller = PlayerController(self.objects, self.bomb_controller, self.map_drawer)
+        self.bomb_controller = BombController(self.objects, self.map_drawer, self.scoreboard)
+        self.player_controller = PlayerController(self.objects, self.bomb_controller, self.map_drawer, self.scoreboard)
         self.screen_controller = ScreenController(self.objects)
 
     def check_endgame(self):
-        return len(self.objects.players) == 1
+        return len(self.objects.players) <= 1
 
     def run(self, running=True):
         while running:
@@ -47,7 +50,7 @@ class GameLogic:
             self.map_drawer.update()
             self.map_drawer.draw(self.objects.screen)
 
-            draw_scoreboard(self.objects.screen, self.map_drawer.scoreboard)
+            draw_scoreboard(self.objects.screen, self.scoreboard)
 
             for player_id in range(1, PLAYERS + 1):
                 player = self.objects.players.get(player_id)

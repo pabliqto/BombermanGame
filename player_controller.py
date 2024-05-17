@@ -2,17 +2,22 @@ from bomb import Bomb
 
 
 class PlayerController:
-    def __init__(self, objects, bomb_controller, map_drawer):
+    def __init__(self, objects, bomb_controller, map_drawer, scoreboard):
         self.objects = objects
         self.bomb_controller = bomb_controller
         self.map_drawer = map_drawer
+        self.scoreboard = scoreboard
 
     def update(self):
         for player in self.objects.players.values():
             player.update()
 
     def get_winner(self):
-        return list(self.objects.players.keys())[0]
+        count = len(self.objects.players.values())
+        if count == 1:
+            return list(self.objects.players.keys())[0]
+        elif count == 0:
+            return self.scoreboard.get_top_scorer()
 
     def give_bomb(self, player_id):
         if player_id in self.objects.players:

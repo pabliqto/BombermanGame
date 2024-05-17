@@ -12,7 +12,6 @@ class MapDrawer:
         self.explosion_sprites = pygame.sprite.RenderPlain(list(objects.explosions.values()))
         self.modifier_sprites = pygame.sprite.RenderPlain(list(objects.modifiers.values()))
         self.player_sprites = pygame.sprite.RenderPlain(list(objects.players.values()))
-        self.scoreboard = {i: 0 for i in range(1, PLAYERS + 1)}
 
     def add_bomb(self, bomb):
         self.bomb_sprites.add(bomb)
