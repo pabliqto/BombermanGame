@@ -60,7 +60,3 @@ class Bomb(pygame.sprite.Sprite):
         self.controller.new_explosion(self.xcoord, self.ycoord)
         self.controller.give_bomb(self.player_id)
         self.kill()
-
-    def check_link(self, player_id):
-        return self.player_id == player_id and self.state
-
