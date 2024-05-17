@@ -3,9 +3,8 @@ import sys
 import ctypes
 
 from game_objects import GameObjects
-from global_variables import N, REAL_SIZE, BOX_CHANCE, PLAYERS
+from global_variables import N, REAL_SIZE
 import resolution as res
-from map_generator import initialize_board
 from game_logic import GameLogic
 
 if __name__ == "__main__":

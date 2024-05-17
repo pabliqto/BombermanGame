@@ -1,7 +1,7 @@
 import pygame
 
 from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, BOMB_STRENGTH
-from utilities import load_png, calculate_player_position
+from utilities import load_png
 from modifiers import ModifierType
 import resolution as res
 
@@ -17,9 +17,8 @@ class Player(pygame.sprite.Sprite):
         self.cooldown = COOLDOWN
         self.player_id = Player.id_counter
         Player.id_counter += 1
-        self.bomb = False
+        self.bomb = None
         self.bomb_count = 1
-        self.current_bomb = 0
         self.bomb_strength = BOMB_STRENGTH
         self.keys = k
         self.color = ["yellow", "blue", "red", "green"][self.player_id - 1]
@@ -95,11 +94,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = rect
         self.xcoord, self.ycoord = self.get_coords()
 
-    def current_bomb_add(self):
-        self.current_bomb += 1
-
-    def change_bomb_status(self):
-        self.bomb = not self.bomb
+    def change_bomb_status(self, bomb=None):
+        self.bomb = bomb
 
     def change_extra_fire(self, value):
         self.extra_fire += value

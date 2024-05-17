@@ -5,17 +5,16 @@ from utilities import load_png, calculate_position
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, xcoord, ycoord, controller, strength=BOMB_STRENGTH, player_id=5, number=-1):
+    def __init__(self, xcoord, ycoord, controller, strength=BOMB_STRENGTH, player_id=5):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("animations/bomb/bomb_1.png", BOMB_SCALE)
         self.rect.center = (calculate_position(xcoord, ycoord))
         self.xcoord = xcoord
         self.ycoord = ycoord
         self.player_id = player_id
-        self.number = number
         self.placement_time = pygame.time.get_ticks()
         self.strength = strength
-        self.state = False
+        self.fire = False
         self.controller = controller
 
     def update(self):
@@ -28,9 +27,9 @@ class Bomb(pygame.sprite.Sprite):
             self.image, _ = load_png("animations/bomb/bomb_2.png", BOMB_SCALE)
 
     def explode(self):
-        if self.state:
+        if self.fire:
             return
-        self.state = True
+        self.fire = True
 
         s_x = max(1, self.xcoord - self.strength)
         f_x = min(N, self.xcoord + self.strength + 1)
@@ -61,4 +60,7 @@ class Bomb(pygame.sprite.Sprite):
         self.controller.new_explosion(self.xcoord, self.ycoord)
         self.controller.give_bomb(self.player_id)
         self.kill()
+
+    def check_link(self, player_id):
+        return self.player_id == player_id and self.state
 

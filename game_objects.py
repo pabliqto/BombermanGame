@@ -57,3 +57,12 @@ class GameObjects:
     @property
     def clock(self):
         return self._clock
+
+    def walls_objects(self):
+        return list(self._walls.values())
+
+    def boxes_objects(self):
+        return list(self._boxes.values())
+
+    def bomb_objects(self):
+        return list(self._bombs.values())

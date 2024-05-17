@@ -18,7 +18,8 @@ class PlayerController:
         if player_id in self.objects.players:
             self.objects.players[player_id].give_bomb()
 
-    def simplify_direction(self, direction):
+    @staticmethod
+    def simplify_direction(direction):
         if len(direction) == 4 or direction == 'AD' or direction == 'WS':
             return
 
@@ -82,24 +83,35 @@ class PlayerController:
         if player.extra_fire > 0:
             player.change_extra_fire(-1)
             strength += 2
-        new_bomb = Bomb(i, j, self.bomb_controller, strength, player_id, player.current_bomb)
+        new_bomb = Bomb(i, j, self.bomb_controller, strength, player_id)
         self.objects.bombs[(i, j)] = new_bomb
         self.map_drawer.add_bomb(new_bomb)
-        player.change_bomb_status()
+        player.change_bomb_status(new_bomb)
         player.bomb_count -= 1
 
     # handle player movement around a newly placed bomb and wall and box collision
     def check_position(self, player, new_pos):
-        if new_pos.collidelist(list(self.objects.walls.values())) == -1 and new_pos.collidelist(
-                list(self.objects.boxes.values())) == -1:
-            blist = list(self.objects.bombs.values())
-            bindex = new_pos.collidelist(blist)
-            if not player.bomb and bindex == -1:
-                player.move(new_pos)
-            elif player.bomb and bindex != -1:
-                if blist[bindex].player_id == player.player_id and blist[bindex].number == player.current_bomb:
-                    player.move(new_pos)
-            elif player.bomb and bindex == -1:
-                player.move(new_pos)
-                player.change_bomb_status()
-                player.current_bomb_add()
+        if self.is_position_clear(player, new_pos):
+            player.move(new_pos)
+
+    # checking if player is colliding with a wall, a box or a bomb
+    def is_position_clear(self, player, position):
+        return (position.collidelist(self.objects.walls_objects()) == -1
+                and position.collidelist(self.objects.boxes_objects()) == -1
+                and self.bomb_move(player, position))
+
+    # handle movement around a bomb
+    def bomb_move(self, player, position):
+        bombs = self.objects.bomb_objects()
+
+        # no bombs - can move freely
+        if len(bombs) == 0:
+            return True
+
+        bindex = position.collidelist(bombs)
+
+        # change player status if he is off the bomb
+        if bindex == -1 and player.bomb:
+            player.change_bomb_status()
+
+        return bindex == -1 or bombs[bindex] is player.bomb
