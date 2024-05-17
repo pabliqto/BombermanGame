@@ -35,8 +35,8 @@ class BombController:
         self.map_drawer.add_explosion(new_explosion)
 
     def handle_explosion(self, x, y, player_id):
-        self.resolve_box_explosion(x, y, player_id)
         self.resolve_bomb_explosion(x, y)
+        self.resolve_box_explosion(x, y, player_id)
         self.manage_player_deaths(x, y, player_id)
         self.new_explosion(x, y)
 
