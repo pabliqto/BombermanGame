@@ -1,8 +1,19 @@
 import pygame
 
 from global_variables import BOMB_SCALE, BOMB_COUNTDOWN, N, BOMB_STRENGTH
-from utilities import load_png, calculate_position
+from utilities import load_png
 from models import Position
+from enum import Enum
+
+
+class ExplodeDirection(Enum):
+    VERTICAL = 1
+    HORIZONTAL = 2
+
+    def coord(self, bomb):
+        if self == ExplodeDirection.VERTICAL:
+            return bomb.xcoord
+        return bomb.ycoord
 
 
 class Bomb(pygame.sprite.Sprite):
@@ -43,34 +54,14 @@ class Bomb(pygame.sprite.Sprite):
             return
         self.fire = True
 
-        s_x = max(1, self.xcoord - self.strength)
-        f_x = min(N, self.xcoord + self.strength + 1)
-        s_y = max(1, self.ycoord - self.strength)
-        f_y = min(N, self.ycoord + self.strength + 1)
+        vectors = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
-        for i in range(self.xcoord, f_x):
-            coords = Position(x=i, y=self.ycoord)
-            if i != self.xcoord and self.controller.is_wall(coords):
-                break
-            self.controller.handle_explosion(coords, self.player_id)
-
-        for i in range(self.xcoord, s_x-1, -1):
-            coords = Position(x=i, y=self.ycoord)
-            if i != self.xcoord and self.controller.is_wall(coords):
-                break
-            self.controller.handle_explosion(coords, self.player_id)
-
-        for j in range(self.ycoord, f_y):
-            coords = Position(x=self.xcoord, y=j)
-            if j != self.ycoord and self.controller.is_wall(coords):
-                break
-            self.controller.handle_explosion(coords, self.player_id)
-
-        for j in range(self.ycoord, s_y-1, -1):
-            coords = Position(x=self.xcoord, y=j)
-            if j != self.ycoord and self.controller.is_wall(coords):
-                break
-            self.controller.handle_explosion(coords, self.player_id)
+        for i in range(4):
+            for j in range(self.strength + 1):
+                coords = self.coords + tuple(j * z for z in vectors[i])
+                if self.controller.is_wall(coords):
+                    break
+                self.controller.handle_explosion(coords, self.player_id)
 
         self.controller.delete_bomb(self.coords)
         self.controller.new_explosion(self.coords)

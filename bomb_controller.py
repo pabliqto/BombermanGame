@@ -50,7 +50,7 @@ class BombController:
                 self.objects.modifiers[coords] = new_modifier
                 self.map_drawer.add_modifier(new_modifier)
             elif random_number < EXTRA_BOMB_CHANCE:
-                new_bomb = Bomb(coords, self)
+                new_bomb = Bomb(calculate_position(coords), coords, self)
                 self.objects.bombs[coords] = new_bomb
                 self.map_drawer.bomb_sprites.add(new_bomb)
 

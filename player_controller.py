@@ -16,10 +16,6 @@ class PlayerController:
         elif count == 0:
             return self.scoreboard.get_top_scorer()
 
-    def give_bomb(self, player_id):
-        if player_id in self.objects.players:
-            self.objects.players[player_id].give_bomb()
-
     @staticmethod
     def simplify_direction(direction):
         if len(direction) == 4 or direction == 'AD' or direction == 'WS':
