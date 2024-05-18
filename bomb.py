@@ -1,15 +1,14 @@
 import pygame
 
-from utilities import load_png
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml', 'images_paths.toml'])
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, position, coords, controller, strength=settings.bomb_strength, player_id=5):
+    def __init__(self, position, coords, controller, loader, strength=settings.bomb_strength, player_id=5):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png(settings.bomb_image_1, settings.bomb_scale)
+        self.image, self.rect = loader.load_png(settings.bomb_image_1, settings.bomb_scale)
         self.rect.center = position.x, position.y
         self._coords = coords
         self.player_id = player_id
@@ -17,6 +16,7 @@ class Bomb(pygame.sprite.Sprite):
         self.strength = strength
         self.fire = False
         self.controller = controller
+        self.loader = loader
 
     @property
     def xcoord(self):
@@ -35,9 +35,9 @@ class Bomb(pygame.sprite.Sprite):
         if current_time - self.placement_time >= settings.bomb_cooldown:
             self.explode()
         if (current_time - self.placement_time) % 400 < 200:
-            self.image, _ = load_png(settings.bomb_image_3, settings.bomb_scale)
+            self.image, _ = self.loader.load_png(settings.bomb_image_3, settings.bomb_scale)
         else:
-            self.image, _ = load_png(settings.bomb_image_2, settings.bomb_scale)
+            self.image, _ = self.loader.load_png(settings.bomb_image_2, settings.bomb_scale)
 
     def explode(self):
         if self.fire:

@@ -1,15 +1,14 @@
 import pygame
 
-from utilities import load_png
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml', 'images_paths.toml'])
 
 
 class Wall(pygame.sprite.Sprite):
-    def __init__(self, position, coords):
+    def __init__(self, position, coords, loader):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png(settings.wall, settings.block_scale)
+        self.image, self.rect = loader.load_png(settings.wall, settings.block_scale)
         self.rect.center = position.x, position.y
         self._coords = coords
 

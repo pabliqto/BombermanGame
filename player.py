@@ -1,6 +1,5 @@
 import pygame
 
-from utilities import load_png
 from modifiers import ModifierType
 import resolution as res
 from models import Position
@@ -12,7 +11,7 @@ settings = Dynaconf(settings_files=['settings.toml'])
 class Player(pygame.sprite.Sprite):
     id_counter = 1
 
-    def __init__(self, position, k):
+    def __init__(self, position, k, loader):
         pygame.sprite.Sprite.__init__(self)
         self.speed = settings.player_speed
         self.direction = "S"
@@ -24,8 +23,10 @@ class Player(pygame.sprite.Sprite):
         self.bomb_count = settings.start_bomb
         self.bomb_strength = settings.bomb_strength
         self.keys = k
+        self.loader = loader
         self.color = ["yellow", "blue", "red", "green"][self.player_id - 1]
-        self.image, self.rect = load_png(f"animations/{self.color}/{self.color}-idle-front.png", settings.player_scale)
+        self.image, self.rect = loader.load_png(f"animations/{self.color}/{self.color}-idle-front.png",
+                                                settings.player_scale)
         self.rect.center = position.x, position.y
         self.score = 0
         self.extra_speed = 0
@@ -63,7 +64,7 @@ class Player(pygame.sprite.Sprite):
             if direction != "WS" and direction != "AD":
                 self.animation = curr_animation
                 pic += str(curr_animation) + '-' + self.color + '.png'
-                self.image, self.rect = load_png(pic, settings.player_scale)
+                self.image, self.rect = self.loader.load_png(pic, settings.player_scale)
             self.cooldown = settings.cooldown
         else:
             self.cooldown -= 1
@@ -87,7 +88,7 @@ class Player(pygame.sprite.Sprite):
             elif direction == "SD" or direction == "WD":
                 name += "right"
             name += '.png'
-            self.image, self.rect = load_png(name, scale)
+            self.image, self.rect = self.loader.load_png(name, scale)
             self.direction = direction
         else:
             self.animation_move(direction)

@@ -1,4 +1,3 @@
-from utilities import calculate_position
 
 
 class ScreenController:
@@ -15,5 +14,5 @@ class ScreenController:
 
         for d in entities:
             for entity in d.values():
-                position = calculate_position(entity.coords)
+                position = self.objects.calculate_position(entity.coords)
                 entity.rect.center = position.x, position.y

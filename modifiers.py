@@ -1,7 +1,6 @@
 import pygame
 import random
 
-from utilities import load_png
 from enum import Enum
 from dynaconf import Dynaconf
 
@@ -15,17 +14,17 @@ class ModifierType(Enum):
 
 
 class Modifier(pygame.sprite.Sprite):
-    def __init__(self, position, coords):
+    def __init__(self, position, coords, loader):
         pygame.sprite.Sprite.__init__(self)
         self.type = random.choice(list(ModifierType))
         if self.type == ModifierType.SPEED:
-            self.image, self.rect = load_png(settings.speed, settings.block_scale)
+            self.image, self.rect = loader.load_png(settings.speed, settings.block_scale)
             self.value = 500
         elif self.type == ModifierType.BOMB:
-            self.image, self.rect = load_png(settings.bomb, settings.block_scale)
+            self.image, self.rect = loader.load_png(settings.bomb, settings.block_scale)
             self.value = 1
         elif self.type == ModifierType.FIRE:
-            self.image, self.rect = load_png(settings.fire, settings.block_scale)
+            self.image, self.rect = loader.load_png(settings.fire, settings.block_scale)
             self.value = 1
         self.rect.center = position.x, position.y
         self._coords = coords

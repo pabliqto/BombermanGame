@@ -2,7 +2,6 @@ import pygame
 
 from abc import ABC, abstractmethod
 from player import Player
-from utilities import calculate_position
 from models import Position
 from dynaconf import Dynaconf
 
@@ -10,7 +9,9 @@ settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class IMapGenerator(ABC):
-    def __init__(self):
+    def __init__(self, loader, calculate_position):
+        self._loader = loader
+        self.calculate_position = calculate_position
         self._n = settings.n
         self._players_count = settings.players
         self._walls_dir = {}
@@ -26,6 +27,10 @@ class IMapGenerator(ABC):
                               Position(x=1, y=self._n - 2)]
         self._players_dir = self.create_players()
 
+    @property
+    def loader(self):
+        return self._loader
+
     @abstractmethod
     def _generate_map(self):
         pass
@@ -33,7 +38,7 @@ class IMapGenerator(ABC):
     def create_players(self):
         players_dir = {}
         for i in range(self._players_count):
-            player = Player(calculate_position(self._start_coords[i]), self._player_keys[i])
+            player = Player(self.calculate_position(self._start_coords[i]), self._player_keys[i], self._loader)
             players_dir[player.player_id] = player
         return players_dir
 

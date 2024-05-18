@@ -1,9 +1,15 @@
 import pygame
 
+import resolution as res
 from enum import Enum
 from full_board_generator import FullBoardGenerator
 from empty_board_generator import EmptyBoardGenerator
 from random_board_generator import RandomBoardGenerator
+from models import Position
+from loader import Loader
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class GameMap(Enum):
@@ -11,24 +17,29 @@ class GameMap(Enum):
     EMPTY = 2
     RANDOM = 3
 
-    def get_map_generator(self):
+    def get_map_generator(self, loader, calculate_position):
         if self == GameMap.FULL:
-            return FullBoardGenerator()
+            return FullBoardGenerator(loader, calculate_position)
         elif self == GameMap.EMPTY:
-            return EmptyBoardGenerator()
+            return EmptyBoardGenerator(loader, calculate_position)
         elif self == GameMap.RANDOM:
-            return RandomBoardGenerator()
+            return RandomBoardGenerator(loader, calculate_position)
 
 
 class GameObjects:
     def __init__(self, screen, map_type: GameMap):
         self._screen = screen
-        self._map_generator = map_type.get_map_generator()
+        self._loader = Loader()
+        self._map_generator = map_type.get_map_generator(self._loader, self.calculate_position)
         self._walls, self._floors, self._boxes, self._players = self._map_generator.get_map()
         self._bombs = {}
         self._explosions = {}
         self._modifiers = {}
         self._clock = pygame.time.Clock()
+
+    @property
+    def loader(self):
+        return self._loader
 
     def add_bomb(self, bomb, position):
         self._bombs[position] = bomb
@@ -38,6 +49,11 @@ class GameObjects:
 
     def add_modifier(self, modifier, position):
         self._modifiers[position] = modifier
+
+    @staticmethod
+    def calculate_position(coords):
+        real_size = settings.image_size * settings.block_scale
+        return Position(x=(coords.x + 1 / 2) * real_size + res.START_X, y=(coords.y + 1 / 2) * real_size + res.START_Y)
 
     @property
     def screen(self):

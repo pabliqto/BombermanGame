@@ -1,5 +1,4 @@
 from bomb import Bomb
-from utilities import calculate_position
 
 
 class PlayerController:
@@ -80,8 +79,8 @@ class PlayerController:
         if player.extra_fire > 0:
             player.change_extra_fire(-1)
             strength += 2
-        position = calculate_position(coords)
-        new_bomb = Bomb(position, coords, self.bomb_controller, strength, player_id)
+        position = self.objects.calculate_position(coords)
+        new_bomb = Bomb(position, coords, self.bomb_controller, self.objects.loader, strength, player_id)
         self.objects.bombs[coords] = new_bomb
         self.map_drawer.add_bomb(new_bomb)
         player.change_bomb_status(new_bomb)

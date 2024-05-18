@@ -1,12 +1,12 @@
 import pygame
 
-from utilities import draw_scoreboard, endgame_text, draw_player_info
 from screen_controller import ScreenController
 from player_controller import PlayerController
 from bomb_controller import BombController
 from map_drawer import MapDrawer
 from scoreboard import Scoreboard
 import resolution as res
+from drawer import Drawer
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])
@@ -21,6 +21,7 @@ class GameLogic:
         self.player_controller = PlayerController(self.objects, self.bomb_controller, self.map_drawer, self.scoreboard)
         self.screen_controller = ScreenController(self.objects)
         self.winner = None
+        self.drawer = Drawer(self.objects.screen, self.objects.loader)
 
     def check_endgame(self):
         return len(self.objects.players) <= 1
@@ -54,11 +55,11 @@ class GameLogic:
             self.map_drawer.update()
             self.map_drawer.draw(self.objects.screen)
 
-            draw_scoreboard(self.objects.screen, self.scoreboard)
+            self.drawer.draw_scoreboard(self.scoreboard)
 
             for player_id in range(1, settings.players + 1):
                 player = self.objects.players.get(player_id)
-                draw_player_info(self.objects.screen, player, player_id)
+                self.drawer.draw_player_info(player, player_id)
 
             # Game logic
             if not self.check_endgame():
@@ -84,7 +85,7 @@ class GameLogic:
             else:
                 if self.winner is None:
                     self.winner = self.player_controller.get_winner()
-                endgame_text(self.objects.screen, self.winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
+                self.drawer.endgame_text(self.winner)
 
             pygame.display.flip()
             self.objects.clock.tick(60)
