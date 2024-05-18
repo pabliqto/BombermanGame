@@ -1,13 +1,15 @@
 import pygame
 
 from utilities import draw_scoreboard, endgame_text, draw_player_info
-from global_variables import N, REAL_SIZE, PLAYERS
 from screen_controller import ScreenController
 from player_controller import PlayerController
 from bomb_controller import BombController
 from map_drawer import MapDrawer
 from scoreboard import Scoreboard
 import resolution as res
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class GameLogic:
@@ -41,8 +43,9 @@ class GameLogic:
                     res.OLD_START_Y = res.START_Y
                     res.WINDOW_WIDTH = event.w
                     res.WINDOW_HEIGHT = event.h
-                    res.START_X = (res.WINDOW_WIDTH - N * REAL_SIZE) // 2
-                    res.START_Y = (res.WINDOW_HEIGHT - N * REAL_SIZE) // 2
+                    real_size = settings.image_size * settings.block_scale
+                    res.START_X = (res.WINDOW_WIDTH - settings.n * real_size) // 2
+                    res.START_Y = (res.WINDOW_HEIGHT - settings.n * real_size) // 2
                     self.screen_controller.resize()
 
             keys = pygame.key.get_pressed()
@@ -53,7 +56,7 @@ class GameLogic:
 
             draw_scoreboard(self.objects.screen, self.scoreboard)
 
-            for player_id in range(1, PLAYERS + 1):
+            for player_id in range(1, settings.players + 1):
                 player = self.objects.players.get(player_id)
                 draw_player_info(self.objects.screen, player, player_id)
 

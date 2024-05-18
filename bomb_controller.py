@@ -1,11 +1,12 @@
 import random
 
 from explosion import Explosion
-from global_variables import MODIFIER_CHANCE, EXTRA_BOMB_CHANCE
 from bomb import Bomb
 from modifiers import Modifier
 from utilities import calculate_position
-from models import Position
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class BombController:
@@ -16,9 +17,6 @@ class BombController:
 
     def delete_bomb(self, coords):
         del self.objects.bombs[coords]
-
-    def is_wall(self, position):
-        return self.objects.walls.get(position) is not None
 
     def give_bomb(self, player_id):
         if self.objects.players.get(player_id):
@@ -45,11 +43,11 @@ class BombController:
             random_number = random.random()
 
             # modifiers and extra bombs
-            if EXTRA_BOMB_CHANCE <= random_number <= MODIFIER_CHANCE:
+            if settings.extra_bomb_chance <= random_number <= settings.modifier_chance:
                 new_modifier = Modifier(calculate_position(coords), coords)
                 self.objects.modifiers[coords] = new_modifier
                 self.map_drawer.add_modifier(new_modifier)
-            elif random_number < EXTRA_BOMB_CHANCE:
+            elif random_number < settings.extra_bomb_chance:
                 new_bomb = Bomb(calculate_position(coords), coords, self)
                 self.objects.bombs[coords] = new_bomb
                 self.map_drawer.bomb_sprites.add(new_bomb)

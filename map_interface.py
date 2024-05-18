@@ -3,14 +3,16 @@ import pygame
 from abc import ABC, abstractmethod
 from player import Player
 from utilities import calculate_position
-from global_variables import N, PLAYERS
 from models import Position
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class IMapGenerator(ABC):
     def __init__(self):
-        self._n = N
-        self._players_count = PLAYERS
+        self._n = settings.n
+        self._players_count = settings.players
         self._walls_dir = {}
         self._floors_dir = {}
         self._boxes_dir = {}

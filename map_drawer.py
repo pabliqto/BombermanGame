@@ -1,7 +1,5 @@
 import pygame
 
-from global_variables import PLAYERS
-
 
 class MapDrawer:
     def __init__(self, objects):

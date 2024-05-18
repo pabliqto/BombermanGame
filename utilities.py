@@ -1,9 +1,11 @@
 import pygame
 import os
 from math import ceil
-from global_variables import REAL_SIZE
 import resolution as res
 from models import Position
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 # code from https://stackoverflow.com/questions/54363047/how-to-draw-outline-on-the-fontpygame
 
@@ -96,7 +98,8 @@ def load_png(name, scale: float = 1):
 
 # Calculate the positions of the objects in the game
 def calculate_position(coords):
-    return Position(x=(coords.x + 1 / 2) * REAL_SIZE + res.START_X, y=(coords.y + 1 / 2) * REAL_SIZE + res.START_Y)
+    real_size = settings.image_size * settings.block_scale
+    return Position(x=(coords.x + 1 / 2) * real_size + res.START_X, y=(coords.y + 1 / 2) * real_size + res.START_Y)
 
 
 # Calculate the position of the player

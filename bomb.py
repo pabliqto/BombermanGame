@@ -1,25 +1,15 @@
 import pygame
 
-from global_variables import BOMB_SCALE, BOMB_COUNTDOWN, N, BOMB_STRENGTH
 from utilities import load_png
-from models import Position
-from enum import Enum
+from dynaconf import Dynaconf
 
-
-class ExplodeDirection(Enum):
-    VERTICAL = 1
-    HORIZONTAL = 2
-
-    def coord(self, bomb):
-        if self == ExplodeDirection.VERTICAL:
-            return bomb.xcoord
-        return bomb.ycoord
+settings = Dynaconf(settings_files=['settings.toml', 'images_paths.toml'])
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, position, coords, controller, strength=BOMB_STRENGTH, player_id=5):
+    def __init__(self, position, coords, controller, strength=settings.bomb_strength, player_id=5):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png("animations/bomb/bomb_1.png", BOMB_SCALE)
+        self.image, self.rect = load_png(settings.bomb_image_1, settings.bomb_scale)
         self.rect.center = position.x, position.y
         self._coords = coords
         self.player_id = player_id
@@ -42,12 +32,12 @@ class Bomb(pygame.sprite.Sprite):
 
     def update(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.placement_time >= BOMB_COUNTDOWN:
+        if current_time - self.placement_time >= settings.bomb_cooldown:
             self.explode()
         if (current_time - self.placement_time) % 400 < 200:
-            self.image, _ = load_png("animations/bomb/bomb_3.png", BOMB_SCALE)
+            self.image, _ = load_png(settings.bomb_image_3, settings.bomb_scale)
         else:
-            self.image, _ = load_png("animations/bomb/bomb_2.png", BOMB_SCALE)
+            self.image, _ = load_png(settings.bomb_image_2, settings.bomb_scale)
 
     def explode(self):
         if self.fire:
@@ -59,7 +49,7 @@ class Bomb(pygame.sprite.Sprite):
         for i in range(4):
             for j in range(self.strength + 1):
                 coords = self.coords + tuple(j * z for z in vectors[i])
-                if self.controller.is_wall(coords):
+                if self.controller.objects.walls.get(coords):
                     break
                 self.controller.handle_explosion(coords, self.player_id)
 

@@ -1,10 +1,12 @@
 import pygame
 
-from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, BOMB_STRENGTH, START_BOMB
 from utilities import load_png
 from modifiers import ModifierType
 import resolution as res
 from models import Position
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class Player(pygame.sprite.Sprite):
@@ -12,18 +14,18 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, position, k):
         pygame.sprite.Sprite.__init__(self)
-        self.speed = PLAYER_SPEED
+        self.speed = settings.player_speed
         self.direction = "S"
         self.animation = 1
-        self.cooldown = COOLDOWN
+        self.cooldown = settings.cooldown
         self.player_id = Player.id_counter
         Player.id_counter += 1
         self.bomb = None
-        self.bomb_count = START_BOMB
-        self.bomb_strength = BOMB_STRENGTH
+        self.bomb_count = settings.start_bomb
+        self.bomb_strength = settings.bomb_strength
         self.keys = k
         self.color = ["yellow", "blue", "red", "green"][self.player_id - 1]
-        self.image, self.rect = load_png(f"animations/{self.color}/{self.color}-idle-front.png", PLAYER_SCALE)
+        self.image, self.rect = load_png(f"animations/{self.color}/{self.color}-idle-front.png", settings.player_scale)
         self.rect.center = position.x, position.y
         self.score = 0
         self.extra_speed = 0
@@ -61,13 +63,13 @@ class Player(pygame.sprite.Sprite):
             if direction != "WS" and direction != "AD":
                 self.animation = curr_animation
                 pic += str(curr_animation) + '-' + self.color + '.png'
-                self.image, self.rect = load_png(pic, PLAYER_SCALE)
-            self.cooldown = COOLDOWN
+                self.image, self.rect = load_png(pic, settings.player_scale)
+            self.cooldown = settings.cooldown
         else:
             self.cooldown -= 1
 
     def orientation(self, direction):
-        scale = PLAYER_SCALE
+        scale = settings.player_scale
         x, y = self.rect.topleft
         if direction != self.direction:
             name = "animations/" + self.color + "/" + self.color + '-idle-'
@@ -106,8 +108,9 @@ class Player(pygame.sprite.Sprite):
 
     def get_coords(self):
         x, y = self.rect.center
-        i = (x - res.START_X) // REAL_SIZE
-        j = (y - res.START_Y) // REAL_SIZE
+        real_size = settings.block_scale * settings.image_size
+        i = (x - res.START_X) // real_size
+        j = (y - res.START_Y) // real_size
         return Position(x=i, y=j)
 
     def can_place_bomb(self):

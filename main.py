@@ -2,10 +2,12 @@ import pygame
 
 
 from game_objects import GameObjects, GameMap
-from global_variables import N, REAL_SIZE
 import resolution as res
 from game_logic import GameLogic
 from pygame._sdl2 import Window
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml'])
 
 
 if __name__ == "__main__":
@@ -19,8 +21,9 @@ if __name__ == "__main__":
     # Set window size
     res.WINDOW_HEIGHT = pygame.display.Info().current_h
     res.WINDOW_WIDTH = pygame.display.Info().current_w
-    res.OLD_START_X = res.START_X = (res.WINDOW_WIDTH - N * REAL_SIZE) // 2
-    res.OLD_START_Y = res.START_Y = (res.WINDOW_HEIGHT - N * REAL_SIZE) // 2
+    real_size = settings.image_size * settings.block_scale
+    res.OLD_START_X = res.START_X = (res.WINDOW_WIDTH - settings.n * real_size) // 2
+    res.OLD_START_Y = res.START_Y = (res.WINDOW_HEIGHT - settings.n * real_size) // 2
 
     # Set window icon, title and game clock
     icon = pygame.image.load("images/animations/yellow/yellow-idle-front.png")

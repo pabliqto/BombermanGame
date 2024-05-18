@@ -1,9 +1,11 @@
 import pygame
 import random
 
-from global_variables import REAL_SIZE, BLOCK_SCALE
 from utilities import load_png
 from enum import Enum
+from dynaconf import Dynaconf
+
+settings = Dynaconf(settings_files=['settings.toml', 'images_paths.toml'])
 
 
 class ModifierType(Enum):
@@ -17,17 +19,16 @@ class Modifier(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.type = random.choice(list(ModifierType))
         if self.type == ModifierType.SPEED:
-            self.image, self.rect = load_png("modifiers/speed.png", BLOCK_SCALE)
+            self.image, self.rect = load_png(settings.speed, settings.block_scale)
             self.value = 500
         elif self.type == ModifierType.BOMB:
-            self.image, self.rect = load_png("modifiers/bomb.png", BLOCK_SCALE)
+            self.image, self.rect = load_png(settings.bomb, settings.block_scale)
             self.value = 1
         elif self.type == ModifierType.FIRE:
-            self.image, self.rect = load_png("modifiers/fire.png", BLOCK_SCALE)
+            self.image, self.rect = load_png(settings.fire, settings.block_scale)
             self.value = 1
         self.rect.center = position.x, position.y
         self._coords = coords
-        self.image = pygame.transform.scale(self.image, (REAL_SIZE, REAL_SIZE))
 
     @property
     def coords(self):
