@@ -1,4 +1,5 @@
 from bomb import Bomb
+from utilities import calculate_position
 
 
 class PlayerController:
@@ -7,10 +8,6 @@ class PlayerController:
         self.bomb_controller = bomb_controller
         self.map_drawer = map_drawer
         self.scoreboard = scoreboard
-
-    def update(self):
-        for player in self.objects.players.values():
-            player.update()
 
     def get_winner(self):
         count = len(self.objects.players.values())
@@ -74,22 +71,22 @@ class PlayerController:
     def place_bomb(self, player_id):
         player = self.objects.players.get(player_id)
         if player.can_place_bomb():
-            position = player.get_coords()
-            if self.is_position_valid_for_bomb(position):
-                self.deploy_bomb(player, position)
+            coords = player.get_coords()
+            if self.is_position_valid_for_bomb(coords):
+                self.deploy_bomb(player, coords)
 
-    def is_position_valid_for_bomb(self, position):
-        return not self.objects.boxes.get(position) and not self.objects.bombs.get(position)
+    def is_position_valid_for_bomb(self, coords):
+        return not self.objects.boxes.get(coords) and not self.objects.bombs.get(coords)
 
-    def deploy_bomb(self, player, position):
+    def deploy_bomb(self, player, coords):
         player_id = player.player_id
-        i, j = position
         strength = player.bomb_strength
         if player.extra_fire > 0:
             player.change_extra_fire(-1)
             strength += 2
-        new_bomb = Bomb(i, j, self.bomb_controller, strength, player_id)
-        self.objects.bombs[(i, j)] = new_bomb
+        position = calculate_position(coords)
+        new_bomb = Bomb(position, coords, self.bomb_controller, strength, player_id)
+        self.objects.bombs[coords] = new_bomb
         self.map_drawer.add_bomb(new_bomb)
         player.change_bomb_status(new_bomb)
         player.bomb_count -= 1

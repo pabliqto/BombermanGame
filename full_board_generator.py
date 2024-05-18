@@ -7,6 +7,6 @@ class FullBoardGenerator(BoxBoardGenerator):
     def __init__(self):
         super().__init__()
 
-    def _generate_box(self, i, j):
-        if 2 < i < self._n - 3 or 2 < j < self._n - 3:
-            self._boxes_dir[(i, j)] = Box(*calculate_position(i, j), i, j)
+    def _generate_box(self, coords):
+        if 2 < coords.x < self._n - 3 or 2 < coords.y < self._n - 3:
+            self._boxes_dir[coords] = Box(calculate_position(coords), coords)

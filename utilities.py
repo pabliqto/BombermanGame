@@ -3,6 +3,7 @@ import os
 from math import ceil
 from global_variables import REAL_SIZE
 import resolution as res
+from models import Position
 
 # code from https://stackoverflow.com/questions/54363047/how-to-draw-outline-on-the-fontpygame
 
@@ -94,15 +95,15 @@ def load_png(name, scale: float = 1):
 
 
 # Calculate the positions of the objects in the game
-def calculate_position(x, y):
-    return (x + 1 / 2) * REAL_SIZE + res.START_X, (y + 1 / 2) * REAL_SIZE + res.START_Y
+def calculate_position(coords):
+    return Position(x=(coords.x + 1 / 2) * REAL_SIZE + res.START_X, y=(coords.y + 1 / 2) * REAL_SIZE + res.START_Y)
 
 
 # Calculate the position of the player
-def calculate_player_position(x, y):
-    new_x = x - res.OLD_START_X
-    new_y = y - res.OLD_START_Y
-    return res.START_X + new_x, res.START_Y + new_y
+def calculate_player_position(position):
+    new_x = position.x - res.OLD_START_X
+    new_y = position.y - res.OLD_START_Y
+    return Position(x=res.START_X + new_x, y=res.START_Y + new_y)
 
 
 def draw_player_info(screen, player, player_id):

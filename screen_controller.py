@@ -15,4 +15,5 @@ class ScreenController:
 
         for d in entities:
             for entity in d.values():
-                entity.rect.center = calculate_position(entity.xcoord, entity.ycoord)
+                position = calculate_position(entity.coords)
+                entity.rect.center = position.x, position.y

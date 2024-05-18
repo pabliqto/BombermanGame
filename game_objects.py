@@ -30,14 +30,14 @@ class GameObjects:
         self._modifiers = {}
         self._clock = pygame.time.Clock()
 
-    def add_bomb(self, bomb, x, y):
-        self._bombs[(x, y)] = bomb
+    def add_bomb(self, bomb, position):
+        self._bombs[position] = bomb
 
-    def add_explosion(self, explosion, x, y):
-        self._explosions[(x, y)] = explosion
+    def add_explosion(self, explosion, position):
+        self._explosions[position] = explosion
 
-    def add_modifier(self, modifier, x, y):
-        self._modifiers[(x, y)] = modifier
+    def add_modifier(self, modifier, position):
+        self._modifiers[position] = modifier
 
     @property
     def screen(self):

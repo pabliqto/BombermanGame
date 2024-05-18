@@ -13,7 +13,7 @@ class ModifierType(Enum):
 
 
 class Modifier(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord):
+    def __init__(self, position, coords):
         pygame.sprite.Sprite.__init__(self)
         self.type = random.choice(list(ModifierType))
         if self.type == ModifierType.SPEED:
@@ -25,9 +25,10 @@ class Modifier(pygame.sprite.Sprite):
         elif self.type == ModifierType.FIRE:
             self.image, self.rect = load_png("modifiers\\fire.png", BLOCK_SCALE)
             self.value = 1
-        self.rect.center = (x, y)
-        self.xcoord = xcoord
-        self.ycoord = ycoord
+        self.rect.center = position.x, position.y
+        self._coords = coords
         self.image = pygame.transform.scale(self.image, (REAL_SIZE, REAL_SIZE))
 
-
+    @property
+    def coords(self):
+        return self._coords

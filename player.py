@@ -4,12 +4,13 @@ from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, BO
 from utilities import load_png
 from modifiers import ModifierType
 import resolution as res
+from models import Position
 
 
 class Player(pygame.sprite.Sprite):
     id_counter = 1
 
-    def __init__(self, x, y, k):
+    def __init__(self, position, k):
         pygame.sprite.Sprite.__init__(self)
         self.speed = PLAYER_SPEED
         self.direction = "S"
@@ -23,11 +24,11 @@ class Player(pygame.sprite.Sprite):
         self.keys = k
         self.color = ["yellow", "blue", "red", "green"][self.player_id - 1]
         self.image, self.rect = load_png(f"animations/{self.color}/{self.color}-idle-front.png", PLAYER_SCALE)
-        self.rect.center = (x, y)
+        self.rect.center = position.x, position.y
         self.score = 0
         self.extra_speed = 0
         self.extra_fire = 0
-        self.xcoord, self.ycoord = self.get_coords()
+        self.coords = self.get_coords()
 
     def update(self):
         if self.extra_speed > 0:
@@ -92,7 +93,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, rect):
         self.rect = rect
-        self.xcoord, self.ycoord = self.get_coords()
+        self.coords = self.get_coords()
 
     def change_bomb_status(self, bomb=None):
         self.bomb = bomb
@@ -107,7 +108,7 @@ class Player(pygame.sprite.Sprite):
         x, y = self.rect.center
         i = (x - res.START_X) // REAL_SIZE
         j = (y - res.START_Y) // REAL_SIZE
-        return i, j
+        return Position(x=i, y=j)
 
     def can_place_bomb(self):
         return not self.bomb and self.bomb_count > 0

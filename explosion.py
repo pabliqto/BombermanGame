@@ -5,15 +5,14 @@ from utilities import load_png
 
 
 class Explosion(pygame.sprite.Sprite):
-    def __init__(self, x, y, xcoord, ycoord):
+    def __init__(self, position, coords):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_png("animations/explosion/explosion1.png", BLOCK_SCALE)
-        self.rect.center = (x, y)
+        self.rect.center = position.x, position.y
         self.time = pygame.time.get_ticks()
         self.countdown = 400
         self.state = False
-        self.xcoord = xcoord
-        self.ycoord = ycoord
+        self._coords = coords
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -23,3 +22,7 @@ class Explosion(pygame.sprite.Sprite):
             self.image, _ = load_png("animations/explosion/explosion3.png", BLOCK_SCALE)
         else:
             self.image, _ = load_png("animations/explosion/explosion2.png", BLOCK_SCALE)
+
+    @property
+    def coords(self):
+        return self._coords
