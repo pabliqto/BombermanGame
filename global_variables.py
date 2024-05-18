@@ -13,3 +13,4 @@ BOX_CHANCE = 0.7  # chance of a box appearing
 MODIFIER_CHANCE = 0.5  # chance of a modifier appearing
 EXTRA_BOMB_CHANCE = 0.02  # chance of an extra bomb appearing
 BOMB_STRENGTH = 2  # how many blocks the explosion goes through
+START_BOMB = 3  # how many bombs the player starts with

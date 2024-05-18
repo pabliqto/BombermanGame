@@ -28,7 +28,7 @@ if __name__ == "__main__":
     pygame.display.set_caption("Bomberman")
     pygame.display.set_icon(icon)
 
-    map_type = GameMap.RANDOM
+    map_type = GameMap.EMPTY
 
     game_objects = GameObjects(screen, map_type)
     gameLogic = GameLogic(game_objects)

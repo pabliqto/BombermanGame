@@ -18,6 +18,7 @@ class GameLogic:
         self.bomb_controller = BombController(self.objects, self.map_drawer, self.scoreboard)
         self.player_controller = PlayerController(self.objects, self.bomb_controller, self.map_drawer, self.scoreboard)
         self.screen_controller = ScreenController(self.objects)
+        self.winner = None
 
     def check_endgame(self):
         return len(self.objects.players) <= 1
@@ -78,8 +79,9 @@ class GameLogic:
                     for hit in hit_list:
                         player.collect_modifier(hit)
             else:
-                winner = self.player_controller.get_winner()
-                endgame_text(self.objects.screen, winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
+                if self.winner is None:
+                    self.winner = self.player_controller.get_winner()
+                endgame_text(self.objects.screen, self.winner, res.WINDOW_WIDTH, res.WINDOW_HEIGHT)
 
             pygame.display.flip()
             self.objects.clock.tick(60)

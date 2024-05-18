@@ -1,6 +1,6 @@
 import pygame
 
-from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, BOMB_STRENGTH
+from global_variables import PLAYER_SPEED, COOLDOWN, PLAYER_SCALE, REAL_SIZE, BOMB_STRENGTH, START_BOMB
 from utilities import load_png
 from modifiers import ModifierType
 import resolution as res
@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.player_id = Player.id_counter
         Player.id_counter += 1
         self.bomb = None
-        self.bomb_count = 1
+        self.bomb_count = START_BOMB
         self.bomb_strength = BOMB_STRENGTH
         self.keys = k
         self.color = ["yellow", "blue", "red", "green"][self.player_id - 1]
