@@ -1,0 +1,14 @@
+image_size = 16  # pixels / resolution of the images
+cooldown = 8
+player_scale = 1.3
+player_speed = 3
+block_scale = 3
+n = 15  # board size, odd number
+bomb_scale = 3
+bomb_cooldown = 3000  # milliseconds
+players = 4  # >=2
+box_chance = 0.7  # chance of a box appearing
+modifier_chance = 0.5  # chance of a modifier appearing
+extra_bomb_chance = 0.02  # chance of an extra bomb appearing
+bomb_strength = 2  # how many blocks the explosion goes through
+start_bomb = 3  # how many bombs the player starts with

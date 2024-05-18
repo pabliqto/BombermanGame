@@ -1,0 +1,19 @@
+# bomb
+bomb_image_1 = "animations/bomb/bomb_1.png"
+bomb_image_2 = "animations/bomb/bomb_2.png"
+bomb_image_3 = "animations/bomb/bomb_3.png"
+
+# modifiers
+speed = "modifiers/speed.png"
+bomb = "modifiers/bomb.png"
+fire = "modifiers/fire.png"
+
+# blocks
+wall = "wall.png"
+floor = "floor.png"
+box = "box.png"
+
+# explosion
+explosion_1 = "animations/explosion/explosion1.png"
+explosion_2 = "animations/explosion/explosion2.png"
+explosion_3 = "animations/explosion/explosion3.png"
