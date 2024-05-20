@@ -26,17 +26,34 @@ class GameLogic:
     def check_endgame(self):
         return len(self.objects.players) <= 1
 
-    def run(self, running=True):
-        while running:
+    def draw_board(self):
+        self.screen_controller.fill()
+        self.map_drawer.update()
+        self.map_drawer.draw(self.objects.screen)
+        self.drawer.draw_scoreboard(self.scoreboard)
+        for player_id in range(1, settings.players + 1):
+            player = self.objects.players.get(player_id)
+            self.drawer.draw_player_info(player, player_id)
+
+    def countdown(self):
+        for i in range(3, -1, -1):
+            self.draw_board()
+            self.drawer.count(i)
+            self.objects.clock.tick(1)
+
+    def run(self):
+
+        self.countdown()
+        while True:
             for event in pygame.event.get():
                 # Quit game
                 if event.type == pygame.QUIT:
-                    running = False
+                    return False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        running = False
+                        return False
                     elif event.key == pygame.K_SPACE and self.check_endgame():
-                        running = False
+                        return True
 
                 # Resize window
                 if event.type == pygame.VIDEORESIZE:
@@ -51,15 +68,7 @@ class GameLogic:
 
             keys = pygame.key.get_pressed()
 
-            self.screen_controller.fill()
-            self.map_drawer.update()
-            self.map_drawer.draw(self.objects.screen)
-
-            self.drawer.draw_scoreboard(self.scoreboard)
-
-            for player_id in range(1, settings.players + 1):
-                player = self.objects.players.get(player_id)
-                self.drawer.draw_player_info(player, player_id)
+            self.draw_board()
 
             # Game logic
             if not self.check_endgame():

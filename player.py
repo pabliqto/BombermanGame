@@ -9,16 +9,14 @@ settings = Dynaconf(settings_files=['settings.toml'])
 
 
 class Player(pygame.sprite.Sprite):
-    id_counter = 1
 
-    def __init__(self, position, k, loader):
+    def __init__(self, p_id, position, k, loader):
         pygame.sprite.Sprite.__init__(self)
         self.speed = settings.player_speed
         self.direction = "S"
         self.animation = 1
         self.cooldown = settings.cooldown
-        self.player_id = Player.id_counter
-        Player.id_counter += 1
+        self.player_id = p_id
         self.bomb = None
         self.bomb_count = settings.start_bomb
         self.bomb_strength = settings.bomb_strength

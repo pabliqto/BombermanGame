@@ -1,3 +1,5 @@
+from time import sleep
+
 import pygame
 import resolution as res
 from math import ceil
@@ -70,7 +72,7 @@ class Drawer:
             player_won_text = self.render("DRAW", player_won, opx=6)
         else:
             player_won_text = self.render(f"PLAYER {winner} WON", player_won, opx=6)
-        exit_text = self.render("Press ESC or Space to exit", font_exit, opx=5)
+        exit_text = self.render("Press Space to restart or ESC to exit ", font_exit, opx=5)
         game_over_text_rect = game_over_text.get_rect(center=(res.WINDOW_WIDTH // 2, res.WINDOW_HEIGHT // 2 - 100))
         player_won_text_rect = player_won_text.get_rect(center=(res.WINDOW_WIDTH // 2, res.WINDOW_HEIGHT // 2 - 30))
         exit_text_rect = exit_text.get_rect(center=(res.WINDOW_WIDTH // 2, res.WINDOW_HEIGHT // 2 + 20))
@@ -144,3 +146,10 @@ class Drawer:
             score_surface = font.render(score_text, True, (255, 255, 255))  # White color
             self.screen.blit(score_surface, (x, y))
             y += 40
+
+    def count(self, i):
+        game_over_font = pygame.font.Font(None, 200)
+        game_over_text = self.render(str(i), game_over_font, opx=7)
+        game_over_text_rect = game_over_text.get_rect(center=(res.WINDOW_WIDTH // 2, res.WINDOW_HEIGHT // 2 - 100))
+        self.screen.blit(game_over_text, game_over_text_rect)
+        pygame.display.update()

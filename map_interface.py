@@ -38,7 +38,7 @@ class IMapGenerator(ABC):
     def create_players(self):
         players_dir = {}
         for i in range(self._players_count):
-            player = Player(self.calculate_position(self._start_coords[i]), self._player_keys[i], self._loader)
+            player = Player(i+1, self.calculate_position(self._start_coords[i]), self._player_keys[i], self._loader)
             players_dir[player.player_id] = player
         return players_dir
 
