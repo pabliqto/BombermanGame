@@ -4,6 +4,7 @@ from modifiers import ModifierType
 import resolution as res
 from models import Position
 from dynaconf import Dynaconf
+import variables as var
 
 settings = Dynaconf(settings_files=['settings.toml'])
 
@@ -12,6 +13,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, p_id, position, k, loader):
         pygame.sprite.Sprite.__init__(self)
+        self.name = var.player_names[p_id-1]
         self.speed = settings.player_speed
         self.direction = "S"
         self.animation = 1
@@ -22,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.bomb_strength = settings.bomb_strength
         self.keys = k
         self.loader = loader
-        self.color = ["yellow", "blue", "red", "green"][self.player_id - 1]
+        self.color = var.players_colors[var.players_colors_values[self.player_id - 1]]
         self.image, self.rect = loader.load_png(f"animations/{self.color}/{self.color}-idle-front.png",
                                                 settings.player_scale)
         self.rect.center = position.x, position.y

@@ -207,7 +207,7 @@
             <string>Player 4</string>
            </property>
            <property name="maxLength">
-            <number>32767</number>
+            <number>8</number>
            </property>
           </widget>
          </item>
@@ -373,6 +373,9 @@
            </property>
            <property name="text">
             <string>Player 2</string>
+           </property>
+           <property name="maxLength">
+            <number>8</number>
            </property>
           </widget>
          </item>
@@ -572,6 +575,9 @@
            <property name="text">
             <string>Player 1</string>
            </property>
+           <property name="maxLength">
+            <number>8</number>
+           </property>
           </widget>
          </item>
          <item row="0" column="2">
@@ -665,6 +671,9 @@
            </property>
            <property name="text">
             <string>Player 3</string>
+           </property>
+           <property name="maxLength">
+            <number>8</number>
            </property>
           </widget>
          </item>

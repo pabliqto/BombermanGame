@@ -3,6 +3,7 @@ from time import sleep
 import pygame
 import resolution as res
 from math import ceil
+import variables as var
 from dynaconf import Dynaconf
 
 images = Dynaconf(settings_files=['images_paths.toml'])
@@ -71,7 +72,7 @@ class Drawer:
         if winner is None:
             player_won_text = self.render("DRAW", player_won, opx=6)
         else:
-            player_won_text = self.render(f"PLAYER {winner} WON", player_won, opx=6)
+            player_won_text = self.render(f"{var.player_names[winner - 1]} WON", player_won, opx=6)
         exit_text = self.render("Press Space to restart or ESC to exit ", font_exit, opx=5)
         game_over_text_rect = game_over_text.get_rect(center=(res.WINDOW_WIDTH // 2, res.WINDOW_HEIGHT // 2 - 100))
         player_won_text_rect = player_won_text.get_rect(center=(res.WINDOW_WIDTH // 2, res.WINDOW_HEIGHT // 2 - 30))
@@ -87,7 +88,7 @@ class Drawer:
 
         # If player is dead, show dead head
         if player is None:
-            head_image, head_rect = self.loader.load_png(f"heads/{colors[player_id - 1]}-head-dead.png", 2.5)
+            head_image, head_rect = self.loader.load_png(f"heads/{var.players_colors[var.players_colors_values[player_id-1]]}-head-dead.png", 2.5)
         else:
             head_image, head_rect = self.loader.load_png(f"heads/{player.color}-head.png", 2.5)
 
@@ -102,7 +103,7 @@ class Drawer:
 
             # Load text
             font = pygame.font.Font(None, 36)
-            text_surface = font.render(f"Player {player.player_id}", True, (255, 255, 255))
+            text_surface = font.render(f"{player.name}", True, (255, 255, 255))
             bomb_count_text_surface = font.render(f"{player.bomb_count}", True, (255, 255, 255))
             speed_text_surface = font.render(f"{ceil(player.extra_speed / 100)}", True, (255, 255, 255))
             radius_text_surface = font.render(f"{player.extra_fire}", True, (255, 255, 255))
@@ -142,7 +143,7 @@ class Drawer:
         x = res.WINDOW_WIDTH - 130
         y = res.WINDOW_HEIGHT // 2 - 80
         for player_id, score in scoreboard.score.items():
-            score_text = f"Player {player_id}: {score}"
+            score_text = f"{var.player_names[player_id-1]}: {score}"
             score_surface = font.render(score_text, True, (255, 255, 255))  # White color
             self.screen.blit(score_surface, (x, y))
             y += 40

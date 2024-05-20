@@ -7,6 +7,7 @@ from map_drawer import MapDrawer
 from scoreboard import Scoreboard
 import resolution as res
 from drawer import Drawer
+import variables as var
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])
@@ -31,7 +32,7 @@ class GameLogic:
         self.map_drawer.update()
         self.map_drawer.draw(self.objects.screen)
         self.drawer.draw_scoreboard(self.scoreboard)
-        for player_id in range(1, settings.players + 1):
+        for player_id in range(1, var.player_number + 1):
             player = self.objects.players.get(player_id)
             self.drawer.draw_player_info(player, player_id)
 

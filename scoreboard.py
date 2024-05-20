@@ -1,11 +1,8 @@
-from dynaconf import Dynaconf
-
-settings = Dynaconf(settings_files=['settings.toml'])
-
+import variables as var
 
 class Scoreboard:
     def __init__(self):
-        self._score = {i: 0 for i in range(1, settings.players + 1)}
+        self._score = {i: 0 for i in range(1, var.player_number + 1)}
 
     def box_destroyed(self, player_id):
         self._score[player_id] += 10

@@ -3,6 +3,7 @@ import random
 from explosion import Explosion
 from bomb import Bomb
 from modifiers import Modifier
+import variables as var
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])
@@ -42,11 +43,12 @@ class BombController:
             random_number = random.random()
 
             # modifiers and extra bombs
-            if settings.extra_bomb_chance <= random_number <= settings.modifier_chance:
+            if var.modifiers and 1 - settings.modifier_chance <= random_number:
                 new_modifier = Modifier(self.objects.calculate_position(coords), coords, self.objects.loader)
                 self.objects.modifiers[coords] = new_modifier
                 self.map_drawer.add_modifier(new_modifier)
-            elif random_number < settings.extra_bomb_chance:
+
+            if var.extra_bomb and random_number <= var.extra_bomb_chance:
                 new_bomb = Bomb(self.objects.calculate_position(coords), coords, self, self.objects.loader)
                 self.objects.bombs[coords] = new_bomb
                 self.map_drawer.bomb_sprites.add(new_bomb)

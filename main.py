@@ -1,39 +1,54 @@
-import pygame
+import sys
+from PyQt5 import QtWidgets
+from menu import MenuUI
+from settings import SettingsUI
+from info import InfoUI
+from game import main
 
-from game_objects import GameObjects, GameMap
-import resolution as res
-from game_logic import GameLogic
-from pygame._sdl2 import Window
-from dynaconf import Dynaconf
 
-settings = Dynaconf(settings_files=['settings.toml'])
+class Controller:
+    def __init__(self):
+        self.app = QtWidgets.QApplication(sys.argv)
+        self.menu_ui = MenuUI(self)
+        self.settings_ui = None
+        self.info_ui = None
+
+    def show_menu(self):
+        if self.settings_ui is not None:
+            self.settings_ui.close()
+        if self.info_ui is not None:
+            self.info_ui.close()
+        self.menu_ui.show()
+
+    def show_settings(self):
+        self.menu_ui.close()
+        if self.settings_ui is None:
+            self.settings_ui = SettingsUI(self)
+        self.settings_ui.show()
+
+    def show_info(self):
+        self.menu_ui.close()
+
+        if self.info_ui is None:
+            self.info_ui = InfoUI(self)
+        self.info_ui.show()
+
+    def run(self):
+        self.show_menu()
+        sys.exit(self.app.exec_())
+
+    def close_all(self):
+        self.menu_ui.close()
+        if self.settings_ui is not None:
+            self.settings_ui.close()
+        if self.info_ui is not None:
+            self.info_ui.close()
+
+    def play_game(self):
+        self.close_all()
+        main()
+
 
 if __name__ == "__main__":
-    # Initialize pygame
-    pygame.init()
-
-    # Maximize window
-    screen = pygame.display.set_mode((res.WINDOW_WIDTH, res.WINDOW_HEIGHT), pygame.RESIZABLE)
-    Window.from_display_module().maximize()
-
-    # Set window size
-    res.WINDOW_HEIGHT = pygame.display.Info().current_h
-    res.WINDOW_WIDTH = pygame.display.Info().current_w
-    real_size = settings.image_size * settings.block_scale
-    res.OLD_START_X = res.START_X = (res.WINDOW_WIDTH - settings.n * real_size) // 2
-    res.OLD_START_Y = res.START_Y = (res.WINDOW_HEIGHT - settings.n * real_size) // 2
-
-    # Set window icon, title and game clock
-    icon = pygame.image.load("images/animations/yellow/yellow-idle-front.png")
-    pygame.display.set_caption("Bomberman")
-    pygame.display.set_icon(icon)
-
-    map_type = GameMap.RANDOM
-
-    game = True
-    while game:
-        game_objects = GameObjects(screen, map_type)
-        gameLogic = GameLogic(game_objects)
-        game = gameLogic.run()
-
-    pygame.quit()
+    controller = Controller()
+    controller.run()

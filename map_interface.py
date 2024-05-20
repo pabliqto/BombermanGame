@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from player import Player
 from models import Position
 from dynaconf import Dynaconf
+import variables as var
 
 settings = Dynaconf(settings_files=['settings.toml'])
 
@@ -13,7 +14,7 @@ class IMapGenerator(ABC):
         self._loader = loader
         self.calculate_position = calculate_position
         self._n = settings.n
-        self._players_count = settings.players
+        self._players_count = var.player_number
         self._walls_dir = {}
         self._floors_dir = {}
         self._boxes_dir = {}

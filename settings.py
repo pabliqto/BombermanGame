@@ -1,5 +1,7 @@
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import Qt
+from game_objects import GameMap
+import variables as var
 
 
 class SettingsUI(object):
@@ -13,6 +15,7 @@ class SettingsUI(object):
         self.ui.show()
         self.ui.back_pushbutton.clicked.connect(self.controller.show_menu)
         self.ui.players_slider.valueChanged.connect(self.slider_changed)
+        self.ui.play_pushbutton.clicked.connect(self.play)
         self.ui.extra_bomb_checkbox.stateChanged.connect(lambda: self.toggle_spinbox(self.ui.extra_bomb_spinbox))
         self.ui.random_map_rbutton.toggled.connect(lambda: self.toggle_spinbox(self.ui.map_type_spinbox))
         self.ui.player1_left_button.clicked.connect(lambda: self.change_color(self.ui.player1_label, 0, -1))
@@ -55,3 +58,31 @@ class SettingsUI(object):
 
     def close(self):
         self.ui.close()
+
+    def play(self):
+        var.player_number = self.ui.players_slider.value()
+        players_names = []
+        players_colors_values = []
+        for i in range(4):
+            text = self.ui.__dict__["player" + str(i + 1) + "_line_edit"].text()
+            if len(text) == 0:
+                text = "Player " + str(i + 1)
+            players_names.append(text)
+            players_colors_values.append(self.values[i])
+
+        var.players_colors_values = players_colors_values
+        var.players_colors = self.players
+        var.player_names = players_names
+        var.extra_bomb = self.ui.extra_bomb_checkbox.isChecked()
+        var.extra_bomb_chance = self.ui.extra_bomb_spinbox.value() / 100
+
+        if self.ui.random_map_rbutton.isChecked():
+            var.map_type = GameMap.RANDOM
+        elif self.ui.empty_map_rbutton.isChecked():
+            var.map_type = GameMap.EMPTY
+        else:
+            var.map_type = GameMap.FULL
+        var.box_chance = self.ui.map_type_spinbox.value() / 100
+        var.modifiers = self.ui.modifiers_checkbox.isChecked()
+
+        self.controller.play_game()

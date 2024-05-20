@@ -8,6 +8,7 @@ from random_board_generator import RandomBoardGenerator
 from models import Position
 from loader import Loader
 from dynaconf import Dynaconf
+import variables as var
 
 settings = Dynaconf(settings_files=['settings.toml'])
 
@@ -27,10 +28,10 @@ class GameMap(Enum):
 
 
 class GameObjects:
-    def __init__(self, screen, map_type: GameMap):
+    def __init__(self, screen):
         self._screen = screen
         self._loader = Loader()
-        self._map_generator = map_type.get_map_generator(self._loader, self.calculate_position)
+        self._map_generator = var.map_type.get_map_generator(self._loader, self.calculate_position)
         self._walls, self._floors, self._boxes, self._players = self._map_generator.get_map()
         self._bombs = {}
         self._explosions = {}
