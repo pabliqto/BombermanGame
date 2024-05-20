@@ -6,7 +6,7 @@ import variables as var
 
 class SettingsUI(object):
     def __init__(self, controller):
-        self.players = ["yellow", "blue", "red", "green"]
+        self.colors = ["yellow", "blue", "red", "green"]
         self.values = [0, 1, 2, 3]
         self.controller = controller
         self.ui = uic.loadUi("settings.ui")
@@ -49,8 +49,8 @@ class SettingsUI(object):
             spinbox.setEnabled(True)
 
     def change_color(self, label, index, value):
-        self.values[index] = (self.values[index] + value) % len(self.players)
-        png_name = "images/gui/" + self.players[self.values[index]] + "_player.png"
+        self.values[index] = (self.values[index] + value) % len(self.colors)
+        png_name = "images/gui/" + self.colors[self.values[index]] + "_player.png"
         label.setPixmap(QtGui.QPixmap(png_name))
 
     def show(self):
@@ -71,7 +71,7 @@ class SettingsUI(object):
             players_colors_values.append(self.values[i])
 
         var.players_colors_values = players_colors_values
-        var.players_colors = self.players
+        var.players_colors = self.colors
         var.player_names = players_names
         var.extra_bomb = self.ui.extra_bomb_checkbox.isChecked()
         var.extra_bomb_chance = self.ui.extra_bomb_spinbox.value() / 100
