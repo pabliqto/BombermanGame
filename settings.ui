@@ -1,0 +1,1299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1042</width>
+    <height>651</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Impact</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #919191;</string>
+  </property>
+  <widget class="QWidget" name="central_widget">
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1041</width>
+      <height>641</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="main_horizontal_layout">
+     <item>
+      <spacer name="left_horizontal_spacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="main_vertical_layout">
+       <item>
+        <spacer name="main_vertical_spacer_1">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="players_slider_horizontal_layout">
+         <item>
+          <spacer name="players_slider_spacer_1">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="no_of_players_label">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Number of players: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="players_slider_spacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>155</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="no2_label">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="players_slider">
+           <property name="styleSheet">
+            <string notr="true">QSlider::handle:horizontal {
+    background: #212121; /* Kolor uchwytu suwaka */
+}</string>
+           </property>
+           <property name="minimum">
+            <number>2</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+           <property name="pageStep">
+            <number>1</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="no4_label">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>4</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="players_slider_spacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>85</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="players_grid_layout">
+         <item row="2" column="6">
+          <widget class="QLineEdit" name="player4_line_edit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777211</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    border: 4px solid #545454;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: #a6a6a6; 
+    selection-background-color: darkgray;
+}</string>
+           </property>
+           <property name="text">
+            <string>Player 4</string>
+           </property>
+           <property name="maxLength">
+            <number>32767</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QFrame" name="player4_frame">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QFrame#player4_frame{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QToolButton" name="player4_left_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow.png</normaloff>images/gui/arrow.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="player4_label">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>images/gui/green_player.png</pixmap>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="player4_right_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow2.png</normaloff>images/gui/arrow2.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <spacer name="players_spacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="arrows_label">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel#arrows_label{
+    border-radius: 10px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <property name="text">
+            <string>↑ ← ↓ → RCTRL</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <spacer name="players_spacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="1">
+          <spacer name="players_spacer_1">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLineEdit" name="player2_line_edit">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    border: 4px solid #545454;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: #a6a6a6; 
+    selection-background-color: darkgray;
+}</string>
+           </property>
+           <property name="text">
+            <string>Player 2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="wasd_label">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel#wasd_label{
+    border-radius: 10px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <property name="text">
+            <string>W A S D SPACE</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QFrame" name="player3_frame">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QFrame#player3_frame{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QToolButton" name="player3_left_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow.png</normaloff>images/gui/arrow.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="player3_label">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>images/gui/red_player.png</pixmap>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="player3_right_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow2.png</normaloff>images/gui/arrow2.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QFrame" name="player1_frame">
+           <property name="styleSheet">
+            <string notr="true">QFrame#player1_frame{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QToolButton" name="player1_left_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow.png</normaloff>images/gui/arrow.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="player1_label">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>images/gui/yellow_player.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <property name="indent">
+               <number>-1</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="player1_right_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow2.png</normaloff>images/gui/arrow2.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLineEdit" name="player1_line_edit">
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    border: 4px solid #545454;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: #a6a6a6; 
+    selection-background-color: darkgray;
+}</string>
+           </property>
+           <property name="text">
+            <string>Player 1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QFrame" name="player2_frame">
+           <property name="styleSheet">
+            <string notr="true">QFrame#player2_frame{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QToolButton" name="player2_left_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow.png</normaloff>images/gui/arrow.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="player2_label">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>images/gui/blue_player.png</pixmap>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="player2_right_button">
+              <property name="styleSheet">
+               <string notr="true">background-color: #545454;</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>images/gui/arrow2.png</normaloff>images/gui/arrow2.png</iconset>
+              </property>
+              <property name="autoRaise">
+               <bool>true</bool>
+              </property>
+              <property name="arrowType">
+               <enum>Qt::NoArrow</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QLineEdit" name="player3_line_edit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    border: 4px solid #545454;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: #a6a6a6; 
+    selection-background-color: darkgray;
+}</string>
+           </property>
+           <property name="text">
+            <string>Player 3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QLabel" name="ijkl_label">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel#ijkl_label{
+    border-radius: 10px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <property name="text">
+            <string>I J K L  RSHIFT</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="6">
+          <widget class="QLabel" name="nums_label">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="font">
+            <font>
+             <family>Impact</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel#nums_label{
+    border-radius: 10px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <property name="text">
+            <string>NUM8 NUM4 NUM5 NUM6 NUM0</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="main_vertical_spacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="settings_grid_layout">
+         <item row="0" column="1">
+          <spacer name="settings_spacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="0">
+          <widget class="QFrame" name="modifiers_frame">
+           <property name="styleSheet">
+            <string notr="true">QFrame{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QLabel" name="modifiers_label">
+              <property name="font">
+               <font>
+                <family>Impact</family>
+                <pointsize>20</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>Modifiers</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="modifiers_checkbox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QCheckBox::indicator:unchecked {
+    image: url(images/gui/unchecked.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(images/gui/checked.png);
+}
+
+QCheckBox{
+	background-color: 545454;
+}</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QFrame" name="extra_bomb_frame">
+           <property name="styleSheet">
+            <string notr="true">QFrame
+{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QLabel" name="extra_bomb_label">
+              <property name="font">
+               <font>
+                <family>Impact</family>
+                <pointsize>20</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Extra bomb from a box</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="extra_bomb_checkbox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QCheckBox::indicator:unchecked {
+    image: url(images/gui/unchecked.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(images/gui/checked.png);
+}
+
+QCheckBox{
+	background-color: 545454;
+}</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="extra_bomb_spinbox">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="font">
+               <font>
+                <family>Impact</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QSpinBox::up-button, QSpinBox::down-button {
+    selection-background-color: transparent;
+}</string>
+              </property>
+              <property name="wrapping">
+               <bool>false</bool>
+              </property>
+              <property name="frame">
+               <bool>true</bool>
+              </property>
+              <property name="readOnly">
+               <bool>false</bool>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::UpDownArrows</enum>
+              </property>
+              <property name="accelerated">
+               <bool>false</bool>
+              </property>
+              <property name="keyboardTracking">
+               <bool>true</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="main_vertical_spacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QFrame" name="map_type_frame">
+         <property name="styleSheet">
+          <string notr="true">QFrame{
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLabel" name="map_type_label">
+            <property name="font">
+             <font>
+              <family>Impact</family>
+              <pointsize>23</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Map type</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="map_type_spacer_1">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>80</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="full_map_rbutton">
+            <property name="font">
+             <font>
+              <family>Impact</family>
+              <pointsize>23</pointsize>
+             </font>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QRadioButton {
+    background-color: #a6a6a6; 
+
+    border-radius: 10px;
+    padding: 10px 20px; 
+    margin: 5px; 
+}
+
+
+QRadioButton::indicator {
+    width: 0px; 
+    height: 0px;
+}
+
+QRadioButton#full_map_rbutton:checked {
+    background-color: #a6a6a6;
+    color: #000000;
+}
+
+QRadioButton#full_map_rbutton:unchecked {
+    background-color: #212121;
+    color: #000000;
+}
+
+QRadioButton#full_map_rbutton:unchecked:hover {
+    background-color: #464545;
+    color: #000000;
+}
+
+QRadioButton#full_map_rbutton:unchecked:pressed {
+    background-color: #393939;
+    color: #000000;
+}
+</string>
+            </property>
+            <property name="text">
+             <string>FULL</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="map_type_spacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>60</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="empty_map_rbutton">
+            <property name="font">
+             <font>
+              <family>Impact</family>
+              <pointsize>23</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QRadioButton {
+    background-color: #a6a6a6; 
+
+    border-radius: 10px;
+    padding: 10px 20px; 
+    margin: 5px; 
+}
+
+
+QRadioButton::indicator {
+    width: 0px; 
+    height: 0px;
+}
+
+QRadioButton#empty_map_rbutton:checked {
+    background-color: #a6a6a6;
+    color: #000000;
+}
+
+QRadioButton#empty_map_rbutton:unchecked {
+    background-color: #212121;
+    color: #000000;
+}
+
+QRadioButton#empty_map_rbutton:unchecked:hover {
+    background-color: #464545;
+    color: #000000;
+}
+
+QRadioButton#empty_map_rbutton:unchecked:pressed {
+    background-color: #393939;
+    color: #000000;
+}
+</string>
+            </property>
+            <property name="text">
+             <string>EMPTY</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="map_type_spacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>60</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="random_map_rbutton">
+            <property name="font">
+             <font>
+              <family>Impact</family>
+              <pointsize>23</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QRadioButton {
+    background-color: #a6a6a6; 
+
+    border-radius: 10px;
+    padding: 10px 20px; 
+    margin: 5px; 
+}
+
+
+QRadioButton::indicator {
+    width: 0px; 
+    height: 0px;
+}
+
+QRadioButton#random_map_rbutton:checked {
+    background-color: #a6a6a6;
+    color: #000000;
+}
+
+QRadioButton#random_map_rbutton:unchecked {
+    background-color: #212121;
+    color: #000000;
+}
+
+QRadioButton#random_map_rbutton:unchecked:hover {
+    background-color: #464545;
+    color: #000000;
+}
+
+QRadioButton#random_map_rbutton:unchecked:pressed {
+    background-color: #393939;
+    color: #000000;
+}
+</string>
+            </property>
+            <property name="text">
+             <string>RANDOM</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="map_type_spacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="map_type_spinbox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <family>Impact</family>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QSpinBox::up-button, QSpinBox::down-button {
+    selection-background-color: transparent;
+}</string>
+            </property>
+            <property name="suffix">
+             <string comment="%" extracomment="%"/>
+            </property>
+            <property name="minimum">
+             <number>50</number>
+            </property>
+            <property name="value">
+             <number>70</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="map_type_spacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>80</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="main_vertical_spacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="play_pushbutton">
+         <property name="font">
+          <font>
+           <family>Impact</family>
+           <pointsize>34</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}
+
+QPushButton:hover {
+    background-color: #6c6c6c; 
+}
+
+QPushButton:pressed {
+    background-color: #3c3c3c;
+}</string>
+         </property>
+         <property name="text">
+          <string>PLAY</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="main_vertical_spacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="right_horizontal_spacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1042</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
