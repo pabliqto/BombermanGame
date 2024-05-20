@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1042</width>
-    <height>651</height>
+    <height>671</height>
    </rect>
   </property>
   <property name="font">
@@ -19,7 +19,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Settings</string>
+   <string>Bomberman</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #919191;</string>
@@ -1253,6 +1253,47 @@ QPushButton:pressed {
        </item>
        <item>
         <spacer name="main_vertical_spacer_5">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="back_pushbutton">
+         <property name="font">
+          <font>
+           <family>Impact</family>
+           <pointsize>34</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    border-radius: 20px;
+    background-color: #545454;
+    padding: 2px;
+}
+
+QPushButton:hover {
+    background-color: #6c6c6c; 
+}
+
+QPushButton:pressed {
+    background-color: #3c3c3c;
+}</string>
+         </property>
+         <property name="text">
+          <string>BACK</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>

@@ -1,17 +1,17 @@
-from PyQt5 import QtWidgets, uic, QtGui
+from PyQt5 import uic, QtGui
 from PyQt5.QtCore import Qt
-import sys
 
 
-class SettingsUI:
-    def __init__(self, app):
+class SettingsUI(object):
+    def __init__(self, controller):
         self.players = ["yellow", "blue", "red", "green"]
         self.values = [0, 1, 2, 3]
-        self.app = app
+        self.controller = controller
         self.ui = uic.loadUi("settings.ui")
         self.ui.setWindowIcon(QtGui.QIcon("images/animations/yellow/yellow-idle-front.png"))
         self.ui.setWindowFlags(self.ui.windowFlags() & ~Qt.WindowMaximizeButtonHint)
         self.ui.show()
+        self.ui.back_pushbutton.clicked.connect(self.controller.show_menu)
         self.ui.players_slider.valueChanged.connect(self.slider_changed)
         self.ui.extra_bomb_checkbox.stateChanged.connect(lambda: self.toggle_spinbox(self.ui.extra_bomb_spinbox))
         self.ui.random_map_rbutton.toggled.connect(lambda: self.toggle_spinbox(self.ui.map_type_spinbox))
@@ -23,10 +23,6 @@ class SettingsUI:
         self.ui.player3_right_button.clicked.connect(lambda: self.change_color(self.ui.player3_label, 2, 1))
         self.ui.player4_left_button.clicked.connect(lambda: self.change_color(self.ui.player4_label, 3, -1))
         self.ui.player4_right_button.clicked.connect(lambda: self.change_color(self.ui.player4_label, 3, 1))
-        self.run()
-
-    def run(self):
-        self.app.exec_()
 
     def slider_changed(self, value):
         players_frames = [self.ui.player1_frame, self.ui.player2_frame, self.ui.player3_frame, self.ui.player4_frame]
@@ -54,7 +50,8 @@ class SettingsUI:
         png_name = "images/gui/" + self.players[self.values[index]] + "_player.png"
         label.setPixmap(QtGui.QPixmap(png_name))
 
+    def show(self):
+        self.ui.show()
 
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    application = SettingsUI(app)
+    def close(self):
+        self.ui.close()
