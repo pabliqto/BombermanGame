@@ -1,6 +1,5 @@
 import pygame
 
-
 from game_objects import GameObjects, GameMap
 import resolution as res
 from game_logic import GameLogic
@@ -8,7 +7,6 @@ from pygame._sdl2 import Window
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])
-
 
 if __name__ == "__main__":
     # Initialize pygame
@@ -32,8 +30,10 @@ if __name__ == "__main__":
 
     map_type = GameMap.RANDOM
 
-    game_objects = GameObjects(screen, map_type)
-    gameLogic = GameLogic(game_objects)
-    gameLogic.run()
+    game = True
+    while game:
+        game_objects = GameObjects(screen, map_type)
+        gameLogic = GameLogic(game_objects)
+        game = gameLogic.run()
 
     pygame.quit()
