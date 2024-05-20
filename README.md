@@ -12,10 +12,12 @@ Bomberman game in python
 
 ![tabela](https://i.imgur.com/2HMfhUN.png)
 
-## Link do plików 
+## Resources
+All resources used in the game are available in the following link:
 ```
-https://drive.google.com/drive/folders/1gpzibEIw-xvMx7Xo9Rx57lgoypi_3oqx?usp=sharing
+https://drive.google.com/drive/folders/12Nmd9LjDrH34S5b1n0QIDXpiKChqR5EQ?usp=sharing
 ```
+If you want to run the game, you need to download the resources and extract the RAR file in project folder.
 
 #### Players
 <img src="demo_img/blue-idle-front.png" width="100"/> <img src="demo_img/red-idle-front.png" width="100"/> <img src="demo_img/green-idle-front.png" width="100"/> <img src="demo_img/yellow-idle-front.png" width="100"/>
