@@ -1,4 +1,5 @@
-import variables as var
+from Util import variables as var
+
 
 class Scoreboard:
     def __init__(self):

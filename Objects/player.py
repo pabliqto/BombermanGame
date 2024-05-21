@@ -1,10 +1,9 @@
 import pygame
 
-from modifiers import ModifierType
-import resolution as res
-from models import Position
+from Objects.modifiers import ModifierType
+from Util import resolution as res, variables as var
+from Util.models import Position
 from dynaconf import Dynaconf
-import variables as var
 
 settings = Dynaconf(settings_files=['settings.toml'])
 

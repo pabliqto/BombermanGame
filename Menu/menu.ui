@@ -61,7 +61,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>images/gui/logo.png</pixmap>
+          <pixmap>../images/gui/logo.png</pixmap>
          </property>
         </widget>
        </item>

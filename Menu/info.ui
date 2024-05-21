@@ -88,7 +88,7 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/animations/yellow/walk-front1-yellow.png</pixmap>
+              <pixmap>../images/animations/yellow/walk-front1-yellow.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -101,7 +101,7 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/animations/red/walk-front1-red.png</pixmap>
+              <pixmap>../images/animations/red/walk-front1-red.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -114,7 +114,7 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/animations/blue/walk-front1-blue.png</pixmap>
+              <pixmap>../images/animations/blue/walk-front1-blue.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -127,7 +127,7 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/animations/green/green-idle-front.png</pixmap>
+              <pixmap>../images/animations/green/green-idle-front.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -300,7 +300,7 @@ NUM 0 - place bomb</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/gui/bomb.png</pixmap>
+              <pixmap>../images/gui/bomb.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -372,7 +372,7 @@ It is possible to extend the bomb's range through a special modifier.</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/gui/speed.png</pixmap>
+              <pixmap>../images/gui/speed.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -411,7 +411,7 @@ It is possible to extend the bomb's range through a special modifier.</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/gui/bomb_2.png</pixmap>
+              <pixmap>../images/gui/bomb_2.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -424,7 +424,7 @@ It is possible to extend the bomb's range through a special modifier.</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>images/gui/fire.png</pixmap>
+              <pixmap>../images/gui/fire.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

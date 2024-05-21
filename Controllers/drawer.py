@@ -1,9 +1,6 @@
-from time import sleep
-
 import pygame
-import resolution as res
+from Util import resolution as res, variables as var
 from math import ceil
-import variables as var
 from dynaconf import Dynaconf
 
 images = Dynaconf(settings_files=['images_paths.toml'])

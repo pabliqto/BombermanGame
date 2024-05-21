@@ -1,4 +1,4 @@
-from bomb import Bomb
+from Objects.bomb import Bomb
 
 
 class PlayerController:

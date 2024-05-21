@@ -1,8 +1,8 @@
 import random
 
-from box import Box
-from box_board_generator import BoxBoardGenerator
-import variables as var
+from Objects.box import Box
+from Map.box_board_generator import BoxBoardGenerator
+from Util import variables as var
 
 
 class RandomBoardGenerator(BoxBoardGenerator):

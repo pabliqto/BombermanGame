@@ -1,11 +1,10 @@
 import pygame
 
-from game_objects import GameObjects, GameMap
-import resolution as res
-from game_logic import GameLogic
+from Objects.game_objects import GameObjects, GameMap
+from Util import resolution as res, variables as var
+from Controllers.game_logic import GameLogic
 from pygame._sdl2 import Window
 from dynaconf import Dynaconf
-import variables as var
 
 settings = Dynaconf(settings_files=['settings.toml'])
 

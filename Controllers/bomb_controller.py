@@ -1,9 +1,9 @@
 import random
 
-from explosion import Explosion
-from bomb import Bomb
-from modifiers import Modifier
-import variables as var
+from Objects.explosion import Explosion
+from Objects.bomb import Bomb
+from Objects.modifiers import Modifier
+from Util import variables as var
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])
