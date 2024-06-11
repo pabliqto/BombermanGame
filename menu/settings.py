@@ -9,7 +9,7 @@ class SettingsUI(object):
         self.colors = ["yellow", "blue", "red", "green"]
         self.values = [0, 1, 2, 3]
         self.controller = controller
-        self.ui = uic.loadUi("Menu/settings.ui")
+        self.ui = uic.loadUi("menu/settings.ui")
         self.ui.setWindowIcon(QtGui.QIcon("images/animations/yellow/yellow-idle-front.png"))
         self.ui.setWindowFlags(self.ui.windowFlags() & ~Qt.WindowMaximizeButtonHint)
         self.ui.show()

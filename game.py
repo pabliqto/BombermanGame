@@ -1,7 +1,7 @@
 import pygame
 
-from objects.game_objects import GameObjects, GameMap
-from utilities import resolution as res, variables as var
+from objects.game_objects import GameObjects
+from utilities import resolution as res
 from controllers.game_logic import GameLogic
 from pygame._sdl2 import Window
 from dynaconf import Dynaconf
@@ -37,7 +37,3 @@ def main():
 
     pygame.quit()
 
-
-if __name__ == "__main__":
-    var.map_type = GameMap.FULL
-    main()
