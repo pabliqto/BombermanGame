@@ -1,5 +1,5 @@
-from Objects.box import Box
-from Map.box_board_generator import BoxBoardGenerator
+from objects.box import Box
+from maps.box_board_generator import BoxBoardGenerator
 
 
 class FullBoardGenerator(BoxBoardGenerator):

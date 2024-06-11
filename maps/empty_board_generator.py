@@ -1,11 +1,10 @@
-from Map.map_interface import IMapGenerator
-from Objects.wall import Wall
-from Objects.floor import Floor
-from abc import ABC, abstractmethod
-from Util.models import Position
+from maps.map_interface import IMapGenerator
+from objects.wall import Wall
+from objects.floor import Floor
+from utilities.models import Position
 
 
-class BoxBoardGenerator(IMapGenerator, ABC):
+class EmptyBoardGenerator(IMapGenerator):
     def __init__(self, loader, calculate_position):
         super().__init__(loader, calculate_position)
 
@@ -18,8 +17,3 @@ class BoxBoardGenerator(IMapGenerator, ABC):
                     self._walls_dir[coords] = Wall(position, coords, self.loader)
                 else:
                     self._floors_dir[coords] = Floor(position, coords, self.loader)
-                    self._generate_box(coords)
-
-    @abstractmethod
-    def _generate_box(self, coords):
-        pass

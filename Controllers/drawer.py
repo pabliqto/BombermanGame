@@ -1,5 +1,5 @@
 import pygame
-from Util import resolution as res, variables as var
+from utilities import resolution as res, variables as var
 from math import ceil
 from dynaconf import Dynaconf
 

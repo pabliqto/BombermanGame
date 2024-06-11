@@ -1,12 +1,12 @@
 import pygame
 
-from Controllers.screen_controller import ScreenController
-from Controllers.player_controller import PlayerController
-from Controllers.bomb_controller import BombController
-from Controllers.map_drawer import MapDrawer
-from Map.scoreboard import Scoreboard
-from Util import resolution as res, variables as var
-from Controllers.drawer import Drawer
+from controllers.screen_controller import ScreenController
+from controllers.player_controller import PlayerController
+from controllers.bomb_controller import BombController
+from controllers.map_drawer import MapDrawer
+from maps.scoreboard import Scoreboard
+from utilities import resolution as res, variables as var
+from controllers.drawer import Drawer
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])

@@ -1,7 +1,7 @@
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import Qt
-from Objects.game_objects import GameMap
-from Util import variables as var
+from objects.game_objects import GameMap
+from utilities import variables as var
 
 
 class SettingsUI(object):
