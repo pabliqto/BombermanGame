@@ -1,12 +1,12 @@
 import pygame
 
-from Util import resolution as res, variables as var
+from utilities import resolution as res, variables as var
 from enum import Enum
-from Map.full_board_generator import FullBoardGenerator
-from Map.empty_board_generator import EmptyBoardGenerator
-from Map.random_board_generator import RandomBoardGenerator
-from Util.models import Position
-from Util.loader import Loader
+from maps.full_board_generator import FullBoardGenerator
+from maps.empty_board_generator import EmptyBoardGenerator
+from maps.random_board_generator import RandomBoardGenerator
+from utilities.models import Position
+from utilities.loader import Loader
 from dynaconf import Dynaconf
 
 settings = Dynaconf(settings_files=['settings.toml'])

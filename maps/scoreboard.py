@@ -1,4 +1,4 @@
-from Util import variables as var
+from utilities import variables as var
 
 
 class Scoreboard:

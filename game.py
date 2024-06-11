@@ -1,8 +1,8 @@
 import pygame
 
-from Objects.game_objects import GameObjects, GameMap
-from Util import resolution as res, variables as var
-from Controllers.game_logic import GameLogic
+from objects.game_objects import GameObjects, GameMap
+from utilities import resolution as res, variables as var
+from controllers.game_logic import GameLogic
 from pygame._sdl2 import Window
 from dynaconf import Dynaconf
 

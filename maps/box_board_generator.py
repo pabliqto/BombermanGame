@@ -1,8 +1,8 @@
-from Map.map_interface import IMapGenerator
-from Objects.wall import Wall
-from Objects.floor import Floor
+from maps.map_interface import IMapGenerator
+from objects.wall import Wall
+from objects.floor import Floor
 from abc import ABC, abstractmethod
-from Util.models import Position
+from utilities.models import Position
 
 
 class BoxBoardGenerator(IMapGenerator, ABC):

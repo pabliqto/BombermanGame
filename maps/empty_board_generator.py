@@ -1,7 +1,7 @@
-from Map.map_interface import IMapGenerator
-from Objects.wall import Wall
-from Objects.floor import Floor
-from Util.models import Position
+from maps.map_interface import IMapGenerator
+from objects.wall import Wall
+from objects.floor import Floor
+from utilities.models import Position
 
 
 class EmptyBoardGenerator(IMapGenerator):

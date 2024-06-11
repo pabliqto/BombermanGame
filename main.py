@@ -1,8 +1,8 @@
 import sys
 from PyQt5 import QtWidgets
-from Menu.menu import MenuUI
-from Menu.settings import SettingsUI
-from Menu.info import InfoUI
+from menu.menu import MenuUI
+from menu.settings import SettingsUI
+from menu.info import InfoUI
 from game import main
 
 

@@ -1,10 +1,10 @@
 import pygame
 
 from abc import ABC, abstractmethod
-from Objects.player import Player
-from Util.models import Position
+from objects.player import Player
+from utilities.models import Position
 from dynaconf import Dynaconf
-from Util import variables as var
+from utilities import variables as var
 
 settings = Dynaconf(settings_files=['settings.toml'])
 
